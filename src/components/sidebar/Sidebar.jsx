@@ -1,26 +1,29 @@
 import "./sidebar.scss";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CategoryIcon from "@mui/icons-material/Category";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import RuleIcon from "@mui/icons-material/Rule";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import DiscountIcon from "@mui/icons-material/Discount";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
 import TableChartIcon from "@mui/icons-material/TableChart";
-import InfoIcon from "@mui/icons-material/Info";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-
-import { Link } from "react-router-dom";
-import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Button } from "@mui/material";
+import { logout } from "../../store/auth/authSlice";
 
 const Sidebar = () => {
-  const { dispatch } = useContext(DarkModeContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout)
+    // dispatch(logout);
+    navigate('/signin');
+  }
+
   return (
     <div className="sidebar">
       <div className="top">
@@ -32,10 +35,12 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">Trang Chủ</p>
-          <li>
-            <HomeOutlinedIcon className="icon" />
-            <span>Trang Chủ</span>
-          </li>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <li>
+              <HomeOutlinedIcon className="icon" />
+              <span>Trang Chủ</span>
+            </li>
+          </Link>
 
           <p className="title">Quản lý hệ thống</p>
           <Link to="/users" style={{ textDecoration: "none" }}>
@@ -44,41 +49,44 @@ const Sidebar = () => {
               <span>Quản lý Người dùng</span>
             </li>
           </Link>
-          <Link to="/products" style={{ textDecoration: "none" }}>
+          <Link to="/categories" style={{ textDecoration: "none" }}>
             <li>
-              <RuleIcon className="icon" />
-              <span>Quản lý Quyền</span>
+              <CategoryIcon className="icon" />
+              <span>Quản lý Loại món ăn</span>
             </li>
           </Link>
-          <li>
-            <CategoryIcon className="icon" />
-            <span>Quản lý Loại món ăn</span>
-          </li>
-          <li>
-            <FastfoodIcon className="icon" />
-            <span>Quản lý Món ăn</span>
-          </li>
-          <li>
-            <TableChartIcon className="icon" />
-            <span>Quản lý Tầng/khu</span>
-          </li>
-          <li>
-            <TableRestaurantIcon className="icon" />
-            <span>Quản lý Bàn ăn</span>
-          </li>
-          <li>
-            <DiscountIcon className="icon" />
-            <span>Quản lý Khuyến mại</span>
-          </li>
-          <li>
-            <ContactPageIcon className="icon" />
-            <span>Quản lý Khách hàng</span>
-          </li>
-          <li>
-            <InfoIcon className="icon" />
-            <span>Quản lý thông tin</span>
-          </li>
-          <p className="title">Quản lý đặt bàn</p>
+          <Link to="/foods" style={{ textDecoration: "none" }}>
+            <li>
+              <FastfoodIcon className="icon" />
+              <span>Quản lý Món ăn</span>
+            </li>
+          </Link>
+          <Link to="/floors" style={{ textDecoration: "none" }}>
+            <li>
+              <TableChartIcon className="icon" />
+              <span>Quản lý Tầng/khu</span>
+            </li>
+          </Link>
+          <Link to="/desk" style={{ textDecoration: "none" }}>
+            <li>
+              <TableRestaurantIcon className="icon" />
+              <span>Quản lý Bàn ăn</span>
+            </li>
+          </Link>
+          <Link to="/sales" style={{ textDecoration: "none" }}>
+            <li>
+              <DiscountIcon className="icon" />
+              <span>Quản lý Khuyến mại</span>
+            </li>
+          </Link>
+          <Link to="/customers" style={{ textDecoration: "none" }}>
+            <li>
+              <ContactPageIcon className="icon" />
+              <span>Quản lý Khách hàng</span>
+            </li>
+          </Link>
+        
+          {/* <p className="title">Quản lý đặt bàn</p>
           <li>
             <PersonOutlinedIcon className="icon" />
             <span>Thêm yêu cầu đặt bàn</span>
@@ -87,26 +95,33 @@ const Sidebar = () => {
           <li>
             <ReceiptIcon className="icon" />
             <span>Lập hóa đơn</span>
-          </li>
+          </li> */}
 
           <p className="title">Báo cáo thống kê</p>
-          <li>
-            <AssessmentIcon className="icon" />
-            <span>Thống kê DT theo ngày</span>
-          </li>
-          <li>
-            <AssessmentIcon className="icon" />
-            <span>Thống kê DT theo tháng</span>
-          </li>
-          <li>
-            <AssessmentIcon className="icon" />
-            <span>Thống kê hóa đơn</span>
-          </li>
+          <Link to="/report-day" style={{ textDecoration: "none" }}>
+            <li>
+              <AssessmentIcon className="icon" />
+              <span>Thống kê DT theo ngày</span>
+            </li>
+          </Link>
+          <Link to="/report-month" style={{ textDecoration: "none" }}>
+            <li>
+              <AssessmentIcon className="icon" />
+              <span>Thống kê DT theo tháng</span>
+            </li>
+          </Link>
+          <Link to="/report-bill" style={{ textDecoration: "none" }}>
+            <li>
+              <AssessmentIcon className="icon" />
+              <span>Thống kê hóa đơn</span>
+            </li>
+          </Link>
 
           <p className="title">Đăng xuất</p>
           <li>
-            <LogoutIcon className="icon" />
-            <span>Đăng xuất</span>
+            <Button onClick={handleLogout}>
+              <LogoutIcon className="icon" />
+            </Button>
           </li>
         </ul>
       </div>

@@ -1,11 +1,25 @@
-import "./new.scss";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import "./edit.scss";
+import Sidebar from "../../../components/sidebar/Sidebar";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../../../components/navbar/Navbar";
 import { useState } from "react";
+import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 
-const New = ({ inputs, title }) => {
+
+const EditCategory = ({ inputs, title }) => {
   const [file, setFile] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleUpdateFood = (event) => {
+    event.preventDefault();
+    console.log("update success");
+  };
+
+  const handleCancel = (event) => {
+    event.preventDefault();
+    navigate("/categories");
+  };
 
   return (
     <div className="new">
@@ -55,4 +69,4 @@ const New = ({ inputs, title }) => {
   );
 };
 
-export default New;
+export default EditCategory;

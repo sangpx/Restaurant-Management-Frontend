@@ -1,5 +1,13 @@
+.list {
+  display: flex;
+  width: 100%;
+  .listContainer {
+    flex: 6;
+  }
+}
+
 .datatable {
-  height: 600px;
+  height: 700px;
   padding: 20px;
   
   .datatableTitle{
@@ -13,10 +21,10 @@
 
     .link{
       text-decoration: none;
-      color: green;
+      color: #999;
       font-size: 16px;
       font-weight: 400;
-      border: 1px solid green;
+      border: 1px solid #7451f8;
       padding: 5px;
       border-radius: 5px;
       cursor: pointer;
@@ -75,4 +83,6 @@
       cursor: pointer;
     }
   }
+
+ 
 }

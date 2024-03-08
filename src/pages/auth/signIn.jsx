@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,10 +8,11 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-// import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { signin } from "../../state/auth/Action";
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/auth/authSlice";
+// import { login } from "../../store/auth/Action";
 
 function Copyright(props) {
   return (
@@ -36,13 +36,9 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  //   const navigate = useNavigate();
-  //   const dispatch = useDispatch();
-  // const accessToken = localStorage.getItem("accessToken");
-  // const {auth} = useSelector(store => store)
-  // useEffect(() => {
-  //   if (accessToken) dispatch(getUser(accessToken));
-  // }, [accessToken, auth.accessToken]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -50,9 +46,8 @@ export default function SignInSide() {
       username: data.get("username"),
       password: data.get("password"),
        };
-       console.log(userData);
-    //     dispatch(signin(userData));
-    //     navigate("/dashboard");
+        dispatch(login(userData));
+        navigate("/");
   };
 
   return (
@@ -133,11 +128,11 @@ export default function SignInSide() {
                     Quên Mật khẩu?
                   </Link>
                 </Grid>
-                <Grid item>
+                {/* <Grid item>
                   <Link href="#" variant="body2">
                     {"Bạn chưa có tài khoản? Đăng Ký"}
                   </Link>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Copyright sx={{ mt: 5 }} />
             </Box>
