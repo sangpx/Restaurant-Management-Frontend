@@ -2,36 +2,56 @@ import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, CircularProgress, TextField } from "@mui/material";
-import { useEffect } from "react";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { getAlls, selectAllCategories } from "../../../store/category/categorySlice";
+import {
+  deleteCategory,
+  detailCategory,
+  getAlls,
+  selectAllCategories,
+} from "../../../store/category/categorySlice";
 
-
-const columns = [
-  { field: "id", headerName: "ID", width: 130 },
-  { field: "name", headerName: "Tên loại", width: 130 },
-  { field: "image", headerName: "Ảnh", width: 130 },
-];
+const columns = [{ field: "name", headerName: "Tên loại", width: 530 }];
 
 const ListCategory = () => {
   const dispatch = useDispatch();
   const categories = useSelector(selectAllCategories);
   const jwt = localStorage.getItem("accessToken");
+  const [deleteId, setDeleteId] = useState(null);
 
-  const handleDelete = (id) => {
-    console.log("Id", id);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = (id) => {
+    setDeleteId(id);
+    setOpen(true);
   };
 
-  const handleUpdate = (id) => {
-    console.log("Id: ", id);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleRefresh = () => {
     dispatch(getAlls());
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteCategory(deleteId));
+    dispatch(getAlls());
+    setDeleteId(null);
+    handleClose();
   };
 
   const actionColumn = [
@@ -42,17 +62,17 @@ const ListCategory = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/categories/edit" style={{ textDecoration: "none" }}>
-              <div
-                className="viewButton"
-                onClick={() => handleUpdate(params.row.id)}
-              >
+            <Link
+              to={`/categories/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">
                 <EditIcon />
               </div>
             </Link>
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleClickOpen(params.row.id)}
             >
               <DeleteIcon />
             </div>
@@ -99,12 +119,12 @@ const ListCategory = () => {
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
-                    pageSize:5
-                    // paginationModel: { page: 0, pageSize: 5 },
+                    pageSize: 8,
                   },
                 }}
-                pageSizeOptions={[5, 10]}
                 checkboxSelection
+                disableRowSelectionOnClick={true}
+                pageSizeOptions={[5, 10, 20]}
               />
             ) : (
               <CircularProgress />
@@ -112,6 +132,26 @@ const ListCategory = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Xác nhận xóa"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn xóa?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Hủy</Button>
+          <Button onClick={handleDelete} autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

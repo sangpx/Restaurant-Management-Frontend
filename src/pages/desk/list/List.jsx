@@ -8,17 +8,31 @@ import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { selectAllFloors, getAlls } from "../../../store/floor/floorSlice";
+import { getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
 
+
+const getStatusName = (status) => {
+  const statusMap = {
+    EMPTY: "Trống",
+    BOOKED: "Đã đặt",
+    CLEANED: "Đã dọn dẹp",
+  };
+  return statusMap[status] || status;
+};
 
 const columns = [
-  { field: "id", headerName: "ID", width: 130 },
-  { field: "name", headerName: "Tên tầng/khu", width: 130 }
+  { field: "name", headerName: "Tên bàn", width: 330 },
+  {
+    field: "status",
+    headerName: "Trạng thái",
+    width: 230,
+    valueGetter: (params) => getStatusName(params.value),
+  },
 ];
 
-const ListFloor = () => {
+const ListDesk = () => {
   const dispatch = useDispatch();
-  const floors = useSelector(selectAllFloors);
+  const desks = useSelector(selectAllDesks);
   const jwt = localStorage.getItem("accessToken");
  
   const handleDelete = (id) => {
@@ -42,7 +56,7 @@ const ListFloor = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/floors/edit" style={{ textDecoration: "none" }}>
+            <Link to="/desks/edit" style={{ textDecoration: "none" }}>
               <div
                 className="viewButton"
                 onClick={() => handleUpdate(params.row.id)}
@@ -83,7 +97,7 @@ const ListFloor = () => {
               variant="outlined"
             />
             <div className="datatableTitle-content">
-              <Link to="/floors/new" className="link">
+              <Link to="/desks/new" className="link">
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
@@ -93,14 +107,13 @@ const ListFloor = () => {
           </div>
 
           <div style={{ marginTop: 25, height: 550, width: "100%" }}>
-            {floors && floors.length > 0 ? (
+            {desks && desks.length > 0 ? (
               <DataGrid
-                rows={floors}
+                rows={desks}
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
-                    // pageSize: 5,
-                    paginationModel: { page: 0, pageSize: 5 },
+                    pageSize: 8,
                   },
                 }}
                 pageSizeOptions={[5, 10]}
@@ -116,4 +129,4 @@ const ListFloor = () => {
   );
 };
 
-export default ListFloor;
+export default ListDesk;

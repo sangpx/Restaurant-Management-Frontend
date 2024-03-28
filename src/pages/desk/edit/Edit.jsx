@@ -1,22 +1,21 @@
-import "./new.scss";
+import "./edit.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 // import { useDispatch } from "react-redux";
-import {TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 
-const NewFloor = ({ title }) => {
+const EditDesk = ({ title }) => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
 
-  const handleAddUser = (event) => {
-    event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    console.log("ok");
-  } 
-  
+  const handleUpdateUser = (event) => {
+    event.preventDefault(event);
+    console.log("Updated");
+  };
+
   const handleCancel = (event) => {
-    event.preventDefault();
-    navigate("/floors");
+    event.preventDefault(event);
+    navigate("/desks");
   };
 
   return (
@@ -40,7 +39,7 @@ const NewFloor = ({ title }) => {
               </div>
               <div className="formButton">
                 <button onClick={handleCancel}>Hủy</button>
-                <button onClick={handleAddUser}>Thêm mới</button>
+                <button onClick={handleUpdateUser}>Chỉnh sửa</button>
               </div>
             </form>
           </div>
@@ -50,4 +49,4 @@ const NewFloor = ({ title }) => {
   );
 };
 
-export default NewFloor;
+export default EditDesk;

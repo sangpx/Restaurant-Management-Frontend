@@ -1,13 +1,13 @@
 import "./edit.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { FormControl, InputLabel, Select, TextField } from "@mui/material";
 import { MenuItem } from "react-pro-sidebar";
 
 const EditUser = ({ title }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const handleUpdateUser = (event) => {
     event.preventDefault(event);

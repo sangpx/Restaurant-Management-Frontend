@@ -2,18 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_BASE_URL } from "../../config/apiConfig";
 import axios from "axios";
 
+
+
 // Du lieu ban dau
 const initialState = {
-  listFloors: [],
-  error: null,
-  status: "idle",
+  listDesks: []
 };
 
 const token = localStorage.getItem("accessToken");
 
-export const getAlls = createAsyncThunk("floors/getAlls", async () => {
+export const getAlls = createAsyncThunk("desks/getAlls", async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/floors/getAllFloors`, {
+    const response = await axios.get(`${API_BASE_URL}/desks/getAlls`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -24,8 +24,9 @@ export const getAlls = createAsyncThunk("floors/getAlls", async () => {
   }
 });
 
-const floorSlice = createSlice({
-  name: "floors",
+
+const deskSlice = createSlice({
+  name: "desks",
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -35,7 +36,7 @@ const floorSlice = createSlice({
       })
       .addCase(getAlls.fulfilled, (state, action) => {
         state.status = "done";
-        state.listFloors = action.payload; //action.payload ===== response.data
+        state.listDesks = action.payload; //action.payload ===== response.data
       })
       .addCase(getAlls.rejected, (state, action) => {
         state.status = "failed";
@@ -46,9 +47,9 @@ const floorSlice = createSlice({
 
 // tao Reducer: voi moi State se co mot Reducer de
 // chiu trach nhiem thay doi cac State day
-export const floorReducer = floorSlice.reducer;
+export const deskReducer = deskSlice.reducer;
 
 //selector
-export const selectAllFloors = (state) => state.floorReducer.listFloors;
+export const selectAllDesks = (state) => state.deskReducer.listDesks;
 
-export default floorReducer;
+export default deskReducer;

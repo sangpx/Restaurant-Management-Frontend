@@ -1,33 +1,26 @@
 import "./new.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../../components/navbar/Navbar";
+// import { useDispatch } from "react-redux";
+import {FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useState } from "react";
-import { TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { createCategory } from "../../../store/category/categorySlice";
 
-
-const NewCategory = ({ title }) => {
+const NewDesk = ({ title }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [name, setName] = useState("");
 
 
-  const handleAddCategory = (event) => {
+
+  const handleAddDesk = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const categoryData = {
-      name: data.get("name"),
-    };
-    dispatch(createCategory(categoryData));
-    setName("");
-    navigate("/categories");
-  };
-
+    console.log("ok");
+  }; 
+  
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate("/categories");
+    navigate("/desks");
   };
 
 
@@ -35,26 +28,37 @@ const NewCategory = ({ title }) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar />
         <div className="top">
           <h1>{title}</h1>
         </div>
         <div className="bottom">
           <div className="right">
-            <form onSubmit={handleAddCategory} method="post">
+            <form onSubmit={handleAddDesk} method="post">
               <div className="formInput">
                 <TextField
                   className="input"
-                  label="Tên Loại"
+                  label="Tên bàn"
                   name="name"
                   id="name"
-                  placeholder="Nhập Tên Loại"
+                  placeholder="Nhập Tên bàn"
                   variant="standard"
-                  value={name} // Đặt giá trị từ state
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
+              <div className="formInput">
+                <TextField
+                  type="password"
+                  className="input"
+                  label="Số lượng"
+                  name="quantitySeat"
+                  id="quantitySeat"
+                  placeholder="Nhập số lượng"
+                  variant="standard"
+                />
+              </div>
 
+             
               <div className="formButton">
                 <button onClick={handleCancel}>Hủy</button>
                 <button type="submit">Thêm mới</button>
@@ -67,4 +71,4 @@ const NewCategory = ({ title }) => {
   );
 };
 
-export default NewCategory;
+export default NewDesk;

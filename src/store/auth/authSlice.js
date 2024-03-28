@@ -15,6 +15,7 @@ const initialState = {
   userToken,
   status: "idle",
   loading: false,
+  message: {},
 };
 
 const token = localStorage.getItem("accessToken");
@@ -39,6 +40,27 @@ export const login = createAsyncThunk(
         localStorage.setItem("accessToken", user.accessToken);
       }
       return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const createUser = createAsyncThunk(
+  "users/signup",
+  async ({ username, password, phone, email, gender }) => {
+    try {
+      const userData = { username, password, phone, email, gender }; // Dữ liệu đăng ký
+      const response = await axios.post(
+        `${API_BASE_URL}/users/signup`,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -96,9 +118,25 @@ const authSlice = createSlice({
         state.status = "done";
         state.loading = false;
         state.userInfo = action.payload;
+        console.log("userInfo: ", state.userInfo);
         state.userToken = action.payload.accessToken; //action.payload ===== response.data
       })
       .addCase(login.rejected, (state, action) => {
+        state.status = "failed";
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(createUser.pending, (state, action) => {
+        state.status = "loading";
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.status = "done";
+        state.loading = false;
+        state.message = action.payload; //action.payload ===== response.data
+      })
+      .addCase(createUser.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
         state.error = action.error.message;

@@ -8,34 +8,54 @@ import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {selectAllUsers, getAlls } from '../../../store/auth/authSlice';
+import { selectAllUsers, getAlls } from "../../../store/auth/authSlice";
 
+const getRoleName = (roles) => {
+  const roleMap = {
+    ROLE_ADMIN: "Quản lý",
+    ROLE_RECEPTIONIST: "Phục vụ",
+    ROLE_CASHIER: "Thu ngân",
+  };
+  return roles.map((role) => roleMap[role.name]).join(", ");
+};
+
+const getStatus = (status) => {
+  return status ? "Đang hoạt động" : "Không hoạt động";
+};
 
 const columns = [
-  { field: "id", headerName: "ID", width: 130 },
-  { field: "username", headerName: "Tên đăng nhập", width: 130 },
-  { field: "email", headerName: "Email", width: 130 },
+  { field: "username", headerName: "Tên đăng nhập", width: 230 },
+  { field: "email", headerName: "Email", width: 230 },
   { field: "phone", headerName: "Số điện thoại", width: 130 },
-  { field: "gender", headerName: "Giới tính", width: 130 },
-  { field: "status", headerName: "Trạng thái", width: 130 },
+  {
+    field: "roles",
+    headerName: "Chức vụ",
+    width: 230,
+    valueGetter: (params) => getRoleName(params.row.roles),
+  },
+  {
+    field: "status",
+    headerName: "Trạng thái",
+    width: 130,
+    valueGetter: (params) => getStatus(params.row.status),
+  },
 ];
 
 const ListUser = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("accessToken");
   const users = useSelector(selectAllUsers);
- 
+
   const handleDelete = (id) => {
     console.log("Id User", id);
   };
-  
+
   const handleUpdate = (id) => {
     console.log("Id User: ", id);
   };
 
-
   const handleRefresh = () => {
-     dispatch(getAlls());
+    dispatch(getAlls());
   };
 
   const actionColumn = [
@@ -103,7 +123,7 @@ const ListUser = () => {
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
-                    pageSize: 5,
+                    pageSize: 10,
                     // paginationModel: { page: 0, pageSize: 5 },
                   },
                 }}
