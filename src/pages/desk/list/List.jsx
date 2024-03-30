@@ -2,37 +2,43 @@ import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {
-  deleteCategory,
-  getAlls,
-  selectAllCategories,
-} from "../../../store/category/categorySlice";
+import { deleteDesk, getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
 
-const columns = [{ field: "name", headerName: "Tên loại", width: 530 }];
 
-const ListCategory = () => {
+const getStatusName = (status) => {
+  const statusMap = {
+    EMPTY: "Trống",
+    BOOKED: "Đã đặt",
+    CLEANED: "Đã dọn dẹp",
+  };
+  return statusMap[status] || status;
+};
+
+const columns = [
+  { field: "name", headerName: "Tên bàn", width: 330 },
+  {
+    field: "status",
+    headerName: "Trạng thái",
+    width: 330,
+    valueGetter: (params) => getStatusName(params.value),
+  },
+];
+
+const ListDesk = () => {
   const dispatch = useDispatch();
-  const categories = useSelector(selectAllCategories);
+  const desks = useSelector(selectAllDesks);
   const jwt = localStorage.getItem("accessToken");
-  const [deleteId, setDeleteId] = useState(null);
-  const [refresh, setRefresh] = useState(false);
-  const [open, setOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+    const [refresh, setRefresh] = useState(false);
+    const [open, setOpen] = useState(false);
 
+ 
   const handleClickOpen = (id) => {
     setDeleteId(id);
     setOpen(true);
@@ -47,7 +53,7 @@ const ListCategory = () => {
   };
 
   const handleDelete = () => {
-    dispatch(deleteCategory(deleteId));
+    dispatch(deleteDesk(deleteId));
     setDeleteId(null);
     handleClose();
     setRefresh(!refresh);
@@ -62,7 +68,7 @@ const ListCategory = () => {
         return (
           <div className="cellAction">
             <Link
-              to={`/categories/edit/${params.row.id}`}
+              to={`/desks/edit/${params.row.id}`}
               style={{ textDecoration: "none" }}
             >
               <div className="viewButton">
@@ -83,7 +89,7 @@ const ListCategory = () => {
 
   useEffect(() => {
     if (jwt) {
-      dispatch(getAlls(jwt));
+      dispatch(getAlls());
     }
   }, [jwt, dispatch, refresh]);
 
@@ -102,7 +108,7 @@ const ListCategory = () => {
               variant="outlined"
             />
             <div className="datatableTitle-content">
-              <Link to="/categories/new" className="link">
+              <Link to="/desks/new" className="link">
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
@@ -112,18 +118,17 @@ const ListCategory = () => {
           </div>
 
           <div style={{ marginTop: 25, height: 550, width: "100%" }}>
-            {categories && categories.length > 0 ? (
+            {desks && desks.length > 0 ? (
               <DataGrid
-                rows={categories}
+                rows={desks}
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
                     pageSize: 8,
                   },
                 }}
+                pageSizeOptions={[5, 10]}
                 checkboxSelection
-                disableRowSelectionOnClick={true}
-                pageSizeOptions={[5, 10, 20]}
               />
             ) : (
               <CircularProgress />
@@ -155,4 +160,4 @@ const ListCategory = () => {
   );
 };
 
-export default ListCategory;
+export default ListDesk;

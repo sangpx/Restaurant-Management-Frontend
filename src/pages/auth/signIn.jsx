@@ -12,7 +12,6 @@ import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/auth/authSlice";
-// import { login } from "../../store/auth/Action";
 
 function Copyright(props) {
   return (
@@ -36,8 +35,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,9 +44,9 @@ export default function SignInSide() {
     const userData = {
       username: data.get("username"),
       password: data.get("password"),
-       };
-        dispatch(login(userData));
-        navigate("/");
+    };
+    dispatch(login(userData));
+    navigate("/");
   };
 
   return (

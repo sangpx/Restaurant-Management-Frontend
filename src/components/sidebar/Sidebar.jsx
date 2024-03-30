@@ -3,10 +3,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CategoryIcon from "@mui/icons-material/Category";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import ContactPageIcon from "@mui/icons-material/ContactPage";
-import DiscountIcon from "@mui/icons-material/Discount";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
-import TableChartIcon from "@mui/icons-material/TableChart";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,7 +17,6 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     dispatch(logout)
-    // dispatch(logout);
     navigate('/signin');
   }
 
@@ -61,30 +57,14 @@ const Sidebar = () => {
               <span>Quản lý Món ăn</span>
             </li>
           </Link>
-          <Link to="/floors" style={{ textDecoration: "none" }}>
-            <li>
-              <TableChartIcon className="icon" />
-              <span>Quản lý Tầng/khu</span>
-            </li>
-          </Link>
-          <Link to="/desk" style={{ textDecoration: "none" }}>
+       
+          <Link to="/desks" style={{ textDecoration: "none" }}>
             <li>
               <TableRestaurantIcon className="icon" />
               <span>Quản lý Bàn ăn</span>
             </li>
           </Link>
-          <Link to="/sales" style={{ textDecoration: "none" }}>
-            <li>
-              <DiscountIcon className="icon" />
-              <span>Quản lý Khuyến mại</span>
-            </li>
-          </Link>
-          <Link to="/customers" style={{ textDecoration: "none" }}>
-            <li>
-              <ContactPageIcon className="icon" />
-              <span>Quản lý Khách hàng</span>
-            </li>
-          </Link>
+         
         
           {/* <p className="title">Quản lý đặt bàn</p>
           <li>
@@ -122,6 +102,7 @@ const Sidebar = () => {
             <Button onClick={handleLogout}>
               <LogoutIcon className="icon" />
             </Button>
+            <span>Đăng xuất</span>
           </li>
         </ul>
       </div>

@@ -8,17 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { getAlls } from "../../../store/food/foodSlice";
-import { selectAllFoods } from "../../../store/food/foodSlice";
-
+import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 130 },
-  { field: "name", headerName: "Tên Món ăn", width: 130 },
-  { field: "description", headerName: "Mô tả", width: 130 },
-  { field: "image", headerName: "Ảnh", width: 130 },
+  { field: "name", headerName: "Tên Món ăn", width: 330 },
+  { field: "description", headerName: "Mô tả", width: 230 },
   { field: "price", headerName: "Giá", width: 130 },
-  { field: "status", headerName: "Trạng thái", width: 130 },
   { field: "categoryName", headerName: "Loại món ăn", width: 130 },
 ];
 
@@ -27,13 +22,6 @@ const ListFood = () => {
   const jwt = localStorage.getItem("accessToken");
   const foods = useSelector(selectAllFoods);
 
-  const handleDelete = (id) => {
-    console.log("Id", id);
-  };
-
-  const handleUpdate = (id) => {
-    console.log("Id: ", id);
-  };
 
   const handleRefresh = () => {
     dispatch(getAlls());
@@ -47,20 +35,14 @@ const ListFood = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/foods/edit" style={{ textDecoration: "none" }}>
-              <div
-                className="viewButton"
-                onClick={() => handleUpdate(params.row.id)}
-              >
+            <Link
+              to={`/foods/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">
                 <EditIcon />
               </div>
             </Link>
-            <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              <DeleteIcon />
-            </div>
           </div>
         );
       },
@@ -104,7 +86,7 @@ const ListFood = () => {
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
-                    paginationModel: { page: 0, pageSize: 5 },
+                    pageSize: 5,
                   },
                 }}
                 pageSizeOptions={[5, 10]}

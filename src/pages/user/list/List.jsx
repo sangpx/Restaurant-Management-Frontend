@@ -1,41 +1,56 @@
 import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, CircularProgress, TextField } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import {selectAllUsers, getAlls } from '../../../store/auth/authSlice';
+import { selectAllUsers, getAlls } from "../../../store/auth/authSlice";
 
+const getRoleName = (roles) => {
+  const roleMap = {
+    ROLE_ADMIN: "Quản lý",
+    ROLE_RECEPTIONIST: "Phục vụ",
+    ROLE_CASHIER: "Thu ngân",
+    ROLE_USER: "Người dùng",
+  };
+  return roles && roles.length > 0
+    ? roles.map((role) => roleMap[role.name]).join(", ")
+    : "";
+};
+
+const getStatus = (status) => {
+  return status ? "Đang hoạt động" : "Không hoạt động";
+};
 
 const columns = [
-  { field: "id", headerName: "ID", width: 130 },
-  { field: "username", headerName: "Tên đăng nhập", width: 130 },
-  { field: "email", headerName: "Email", width: 130 },
+  { field: "username", headerName: "Tên đăng nhập", width: 230 },
+  { field: "email", headerName: "Email", width: 230 },
   { field: "phone", headerName: "Số điện thoại", width: 130 },
-  { field: "gender", headerName: "Giới tính", width: 130 },
-  { field: "status", headerName: "Trạng thái", width: 130 },
+  {
+    field: "roles",
+    headerName: "Chức vụ",
+    width: 330,
+    valueGetter: (params) => getRoleName(params.row.roles),
+  },
+  // {
+  //   field: "status",
+  //   headerName: "Trạng thái",
+  //   width: 230,
+  //   valueGetter: (params) => getStatus(params.row.status),
+  // },
 ];
 
 const ListUser = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("accessToken");
   const users = useSelector(selectAllUsers);
- 
-  const handleDelete = (id) => {
-    console.log("Id User", id);
-  };
-  
-  const handleUpdate = (id) => {
-    console.log("Id User: ", id);
-  };
-
+  const [refresh, setRefresh] = useState(false);
 
   const handleRefresh = () => {
-     dispatch(getAlls());
+    dispatch(getAlls());
   };
 
   const actionColumn = [
@@ -46,20 +61,14 @@ const ListUser = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/users/edit" style={{ textDecoration: "none" }}>
-              <div
-                className="viewButton"
-                onClick={() => handleUpdate(params.row.id)}
-              >
+            <Link
+              to={`/users/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">
                 <EditIcon />
               </div>
             </Link>
-            <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              <DeleteIcon />
-            </div>
           </div>
         );
       },
@@ -70,7 +79,7 @@ const ListUser = () => {
     if (jwt) {
       dispatch(getAlls(jwt));
     }
-  }, [jwt, dispatch]);
+  }, [jwt, dispatch, refresh]);
 
   return (
     <div className="list">
@@ -104,7 +113,6 @@ const ListUser = () => {
                 initialState={{
                   pagination: {
                     pageSize: 5,
-                    // paginationModel: { page: 0, pageSize: 5 },
                   },
                 }}
                 pageSizeOptions={[5, 10]}

@@ -2,19 +2,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_BASE_URL } from "../../config/apiConfig";
 import axios from "axios";
 
+
+
 // Du lieu ban dau
 const initialState = {
-  listFoods: [],
-  food: {},
+  listDesks: [],
+  desk: {},
   error: null,
   status: "idle",
 };
 
 const token = localStorage.getItem("accessToken");
 
-export const getAlls = createAsyncThunk("foods/getAlls", async () => {
+export const getAlls = createAsyncThunk("desks/getAlls", async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/foods/getAlls`, {
+    const response = await axios.get(`${API_BASE_URL}/desks/getAlls`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -25,33 +27,30 @@ export const getAlls = createAsyncThunk("foods/getAlls", async () => {
   }
 });
 
-export const createFood = createAsyncThunk(
-  "foods/createFood",
-  async ({ categoryId, newFood }) => {
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/foods/createFood?categoryId=${categoryId}`,
-        newFood,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+export const createDesk = createAsyncThunk("desks/createDesk", async (newDesk) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/desks/createDesk`,
+      newDesk,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
-);
+});
 
-export const updateFood = createAsyncThunk(
-  "foods/updateFood",
-  async ({ categoryId, id, newFood }) => {
+export const updateDesk = createAsyncThunk(
+  "desks/updateDesk",
+  async ({ id, newDesk }) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/foods/updateFood/${id}?categoryId=${categoryId}`,
-        newFood,
+        `${API_BASE_URL}/desks/updateDesk/${id}`,
+        newDesk,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,12 +64,12 @@ export const updateFood = createAsyncThunk(
   }
 );
 
-export const detailFood = createAsyncThunk(
-  "foods/getDetailFood",
+export const detailDesk = createAsyncThunk(
+  "desks/getDetailDesk",
   async (id) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/foods/getDetailFood/${id}`,
+        `${API_BASE_URL}/desks/getDetailDesk/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -84,12 +83,12 @@ export const detailFood = createAsyncThunk(
   }
 );
 
-export const deleteFood = createAsyncThunk(
-  "foods/deleteFood",
+export const deleteDesk = createAsyncThunk(
+  "desks/deleteDesk",
   async (id) => {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/foods/deleteFood/${id}`,
+        `${API_BASE_URL}/desks/deleteDesk/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -103,8 +102,9 @@ export const deleteFood = createAsyncThunk(
   }
 );
 
-const foodSlice = createSlice({
-  name: "foods",
+
+const deskSlice = createSlice({
+  name: "desks",
   initialState,
   reducers: {},
   extraReducers(builder) {
@@ -114,48 +114,48 @@ const foodSlice = createSlice({
       })
       .addCase(getAlls.fulfilled, (state, action) => {
         state.status = "done";
-        state.listFoods = action.payload; //action.payload ===== response.data
+        state.listDesks = action.payload; //action.payload ===== response.data
       })
       .addCase(getAlls.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(detailFood.pending, (state, action) => {
+      .addCase(detailDesk.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(detailFood.fulfilled, (state, action) => {
+      .addCase(detailDesk.fulfilled, (state, action) => {
         state.status = "done";
-        state.food = action.payload;
+        state.desk = action.payload;
       })
-      .addCase(detailFood.rejected, (state, action) => {
+      .addCase(detailDesk.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(createFood.fulfilled, (state, action) => {
+      .addCase(createDesk.fulfilled, (state, action) => {
         state.status = "done";
-        state.listFoods.push(action.payload); //action.payload ===== response.data
+        state.listDesks.push(action.payload); //action.payload ===== response.data
       })
-      .addCase(createFood.rejected, (state, action) => {
+      .addCase(createDesk.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(updateFood.fulfilled, (state, action) => {
+      .addCase(updateDesk.fulfilled, (state, action) => {
         state.status = "done";
-        const updatedFood = action.payload;
-        const index = state.listFoods.findIndex(
-          (food) => food.id === updatedFood.id
+        const updatedDesk = action.payload;
+        const index = state.listDesks.findIndex(
+          (desk) => desk.id === updatedDesk.id
         );
         if (index !== -1) {
-          state.listFoods[index] = updatedFood; 
+          state.listDesks[index] = updatedDesk;
         }
       })
-      .addCase(deleteFood.pending, (state, action) => {
+      .addCase(deleteDesk.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(deleteFood.fulfilled, (state, action) => {
+      .addCase(deleteDesk.fulfilled, (state, action) => {
         state.status = "done";
       })
-      .addCase(deleteFood.rejected, (state, action) => {
+      .addCase(deleteDesk.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -164,10 +164,10 @@ const foodSlice = createSlice({
 
 // tao Reducer: voi moi State se co mot Reducer de
 // chiu trach nhiem thay doi cac State day
-export const foodReducer = foodSlice.reducer;
+export const deskReducer = deskSlice.reducer;
 
 //selector
-export const selectAllFoods = (state) => state.foodReducer.listFoods;
-export const selectFood = (state) => state.foodReducer.food;
+export const selectAllDesks = (state) => state.deskReducer.listDesks;
+export const selectDesk = (state) => state.deskReducer.desk;
 
-export default foodReducer;
+export default deskReducer;

@@ -1,64 +1,62 @@
 import "./edit.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../../components/navbar/Navbar";
-import { useEffect, useState } from "react";
-import { TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { detailCategory, selectCategory, updateCategory } from "../../../store/category/categorySlice";
+import { TextField } from "@mui/material";
+import { detailDesk, selectDesk, updateDesk } from "../../../store/desk/deskSlice";
+import { useEffect, useState } from "react";
 
-
-const EditCategory = ({ title }) => {
+const EditDesk = ({ title }) => {
   const { id } = useParams();
-  const [name, setName] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const category = useSelector(selectCategory);
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const desk = useSelector(selectDesk);
+
   // Dispatch action để lấy chi tiết danh mục khi component được tạo
   useEffect(() => {
-    dispatch(detailCategory(id));
+    dispatch(detailDesk(id));
   }, [dispatch, id]);
 
   // Cập nhật trạng thái name khi dữ liệu chi tiết danh mục được lấy về
   useEffect(() => {
-    if (category.name) {
-      setName(category.name);
+    if (desk.name) {
+      setName(desk.name);
     }
-  }, [category]);
+  }, [desk]);
 
-  const handleUpdateCategory = (event) => {
+  const handleUpdateDesk = (event) => {
     event.preventDefault();
-    const categoryData = {
+    const deskData = {
       id,
-      newCategory: { name },
+      newDesk: { name },
     };
-    dispatch(updateCategory(categoryData));
-    navigate("/categories");
+    dispatch(updateDesk(deskData));
+    navigate("/desks");
   };
 
   const handleCancel = (event) => {
-    event.preventDefault();
-    navigate("/categories");
+    event.preventDefault(event);
+    navigate("/desks");
   };
 
   return (
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar />
         <div className="top">
           <h1>{title}</h1>
         </div>
         <div className="bottom">
           <div className="right">
-            <form onSubmit={handleUpdateCategory} method="post">
+            <form onSubmit={handleUpdateDesk} method="post">
               <div className="formInput">
                 <TextField
                   className="input"
-                  label="Tên Loại"
+                  label="Tên bàn"
                   name="name"
                   id="name"
-                  placeholder="Nhập Tên Loại"
+                  placeholder="Nhập Tên bàn"
                   variant="standard"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -77,4 +75,4 @@ const EditCategory = ({ title }) => {
   );
 };
 
-export default EditCategory;
+export default EditDesk;

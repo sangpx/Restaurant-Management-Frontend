@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import floorReducer from "./floor/floorSlice";
 import foodReducer from "./food/foodSlice";
 import categoryReducer from './category/categorySlice';
 import userReducer from './auth/authSlice';
+import deskReducer from './desk/deskSlice';
 
 
 
@@ -11,8 +11,8 @@ import userReducer from './auth/authSlice';
 export default configureStore({
   reducer: {
     userReducer,
-    floorReducer,
     foodReducer,
     categoryReducer,
+    deskReducer,
   },
 });

@@ -1,19 +1,72 @@
 import "./edit.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../../components/navbar/Navbar";
-import { useState } from "react";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAlls,
+  selectAllCategories,
+} from "../../../store/category/categorySlice";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import {
+  detailFood,
+  selectFood, 
+  updateFood,
+} from "../../../store/food/foodSlice";
 
-
-const EditFood = ({ inputs, title }) => {
-  const [file, setFile] = useState("");
-
+const EditFood = ({ title }) => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const food = useSelector(selectFood);
+  const [newFood, setNewFood] = useState({});
+  const categories = useSelector(selectAllCategories);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  const handleUpdateFood = (event) => {
+  // Dispatch action để lấy chi tiết danh mục khi component được tạo
+  useEffect(() => {
+    dispatch(detailFood(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (food) {
+      setNewFood({
+        name: food.name,
+        description: food.description,
+        price: food.price,
+      });
+      setSelectedCategory(food.categoryId);
+    }
+  }, [food]);
+
+  useEffect(() => {
+    dispatch(getAlls());
+  }, [dispatch]);
+
+  const handleInputChange = useCallback((e) => {
+    setNewFood((prevNewFood) => ({
+      ...prevNewFood,
+      [e.target.name]: e.target.value,
+    }));
+  }, []);
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  const handleUpdateFood = async (event) => {
     event.preventDefault();
-    console.log("update success");
+    await dispatch(
+      updateFood({ id: id, categoryId: selectedCategory, newFood })
+    );
+    navigate("/foods");
   };
 
   const handleCancel = (event) => {
@@ -30,37 +83,70 @@ const EditFood = ({ inputs, title }) => {
           <h1>{title}</h1>
         </div>
         <div className="bottom">
-          <div className="left">
-            <img
-              src={
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-          </div>
           <div className="right">
-            <form>
+            <form onSubmit={handleUpdateFood} method="post">
               <div className="formInput">
-                <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
+                <TextField
+                  className="input"
+                  label="Tên Món ăn"
+                  name="name"
+                  id="name"
+                  placeholder="Nhập Tên Món ăn"
+                  variant="standard"
+                  value={newFood.name || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="formInput">
+                <TextField
+                  className="input"
+                  label="Mô tả"
+                  name="description"
+                  id="description"
+                  placeholder="Nhập Mô tả"
+                  variant="standard"
+                  value={newFood.description || ""}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="formInput">
+                <TextField
+                  className="input"
+                  label="Giá"
+                  name="price"
+                  id="price"
+                  placeholder="Nhập Giá"
+                  variant="standard"
+                  value={newFood.price || ""}
+                  onChange={handleInputChange}
                 />
               </div>
 
-              {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
-                  <label>{input.label}</label>
-                  <input type={input.type} placeholder={input.placeholder} />
-                </div>
-              ))}
-              <button>Send</button>
+              <div className="formInput">
+                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                  <InputLabel id="categoryId">Loại món ăn</InputLabel>
+                  <Select
+                    className="input"
+                    labelId="categoryId"
+                    id="categoryId"
+                    label="Quyền"
+                    value={selectedCategory}
+                    onChange={handleCategoryChange}
+                    name="categoryId"
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="formButton">
+                <button onClick={handleCancel}>Hủy</button>
+                <button type="submit">Chỉnh sửa</button>
+              </div>
             </form>
           </div>
         </div>
