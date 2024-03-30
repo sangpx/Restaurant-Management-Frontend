@@ -5,14 +5,12 @@ import Navbar from "../../../components/navbar/Navbar";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { createCategory } from "../../../store/category/categorySlice";
-
+import { createCategory, getAlls } from "../../../store/category/categorySlice";
 
 const NewCategory = ({ title }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-
 
   const handleAddCategory = (event) => {
     event.preventDefault();
@@ -23,13 +21,13 @@ const NewCategory = ({ title }) => {
     dispatch(createCategory(categoryData));
     setName("");
     navigate("/categories");
+    dispatch(getAlls());
   };
 
   const handleCancel = (event) => {
     event.preventDefault();
     navigate("/categories");
   };
-
 
   return (
     <div className="new">
@@ -50,7 +48,7 @@ const NewCategory = ({ title }) => {
                   id="name"
                   placeholder="Nhập Tên Loại"
                   variant="standard"
-                  value={name} // Đặt giá trị từ state
+                  value={name} 
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>

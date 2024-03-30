@@ -106,17 +106,7 @@ export const deleteCategory = createAsyncThunk(
 const categorySlice = createSlice({
   name: "categories",
   initialState,
-  reducers: {
-    // findCategory(state, action) {
-    //   const id = action.payload;
-    //   const existingCategory = state.listCategories.find(
-    //     (category) => category.id === id
-    //   );
-    //   if (existingCategory) {
-    //     state.category = existingCategory;
-    //   }
-    // },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(getAlls.pending, (state, action) => {

@@ -2,13 +2,13 @@ import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, CircularProgress, TextField } from "@mui/material";
-import { useEffect } from "react";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
+import { deleteDesk, getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
 
 
 const getStatusName = (status) => {
@@ -25,7 +25,7 @@ const columns = [
   {
     field: "status",
     headerName: "Trạng thái",
-    width: 230,
+    width: 330,
     valueGetter: (params) => getStatusName(params.value),
   },
 ];
@@ -34,18 +34,29 @@ const ListDesk = () => {
   const dispatch = useDispatch();
   const desks = useSelector(selectAllDesks);
   const jwt = localStorage.getItem("accessToken");
+    const [deleteId, setDeleteId] = useState(null);
+    const [refresh, setRefresh] = useState(false);
+    const [open, setOpen] = useState(false);
+
  
-  const handleDelete = (id) => {
-    console.log("Id", id);
-  };
-  
-  const handleUpdate = (id) => {
-    console.log("Id: ", id);
+  const handleClickOpen = (id) => {
+    setDeleteId(id);
+    setOpen(true);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleRefresh = () => {
     dispatch(getAlls());
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteDesk(deleteId));
+    setDeleteId(null);
+    handleClose();
+    setRefresh(!refresh);
   };
 
   const actionColumn = [
@@ -56,20 +67,20 @@ const ListDesk = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/desks/edit" style={{ textDecoration: "none" }}>
-              <div
-                className="viewButton"
-                onClick={() => handleUpdate(params.row.id)}
-              >
+            <Link
+              to={`/desks/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">
                 <EditIcon />
               </div>
             </Link>
-            <div
+            {/* <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleClickOpen(params.row.id)}
             >
               <DeleteIcon />
-            </div>
+            </div> */}
           </div>
         );
       },
@@ -80,7 +91,7 @@ const ListDesk = () => {
     if (jwt) {
       dispatch(getAlls());
     }
-  }, [jwt, dispatch]);
+  }, [jwt, dispatch, refresh]);
 
   return (
     <div className="list">
@@ -125,6 +136,26 @@ const ListDesk = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Xác nhận xóa"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn xóa?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Hủy</Button>
+          <Button onClick={handleDelete} autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

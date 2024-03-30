@@ -19,7 +19,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   deleteCategory,
-  detailCategory,
   getAlls,
   selectAllCategories,
 } from "../../../store/category/categorySlice";
@@ -31,7 +30,7 @@ const ListCategory = () => {
   const categories = useSelector(selectAllCategories);
   const jwt = localStorage.getItem("accessToken");
   const [deleteId, setDeleteId] = useState(null);
-
+  const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (id) => {
@@ -49,9 +48,9 @@ const ListCategory = () => {
 
   const handleDelete = () => {
     dispatch(deleteCategory(deleteId));
-    dispatch(getAlls());
     setDeleteId(null);
     handleClose();
+    setRefresh(!refresh);
   };
 
   const actionColumn = [
@@ -70,12 +69,12 @@ const ListCategory = () => {
                 <EditIcon />
               </div>
             </Link>
-            <div
+            {/* <div
               className="deleteButton"
               onClick={() => handleClickOpen(params.row.id)}
             >
               <DeleteIcon />
-            </div>
+            </div> */}
           </div>
         );
       },
@@ -86,7 +85,7 @@ const ListCategory = () => {
     if (jwt) {
       dispatch(getAlls(jwt));
     }
-  }, [jwt, dispatch]);
+  }, [jwt, dispatch, refresh]);
 
   return (
     <div className="list">

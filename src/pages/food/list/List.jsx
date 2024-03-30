@@ -10,7 +10,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 
-
 const columns = [
   { field: "name", headerName: "Tên Món ăn", width: 330 },
   { field: "description", headerName: "Mô tả", width: 230 },
@@ -23,13 +22,6 @@ const ListFood = () => {
   const jwt = localStorage.getItem("accessToken");
   const foods = useSelector(selectAllFoods);
 
-  const handleDelete = (id) => {
-    console.log("Id", id);
-  };
-
-  const handleUpdate = (id) => {
-    console.log("Id: ", id);
-  };
 
   const handleRefresh = () => {
     dispatch(getAlls());
@@ -43,20 +35,14 @@ const ListFood = () => {
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/foods/edit" style={{ textDecoration: "none" }}>
-              <div
-                className="viewButton"
-                onClick={() => handleUpdate(params.row.id)}
-              >
+            <Link
+              to={`/foods/edit/${params.row.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="viewButton">
                 <EditIcon />
               </div>
             </Link>
-            <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              <DeleteIcon />
-            </div>
           </div>
         );
       },
@@ -100,8 +86,7 @@ const ListFood = () => {
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {
-                    pageSize: 5
-                    // paginationModel: { page: 0, pageSize: 5 },
+                    pageSize: 5,
                   },
                 }}
                 pageSizeOptions={[5, 10]}

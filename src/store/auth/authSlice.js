@@ -10,6 +10,8 @@ const userToken = localStorage.getItem("userToken")
 // Du lieu ban dau
 const initialState = {
   listUsers: [],
+  listRoles: [],
+  user: {},
   error: null,
   userInfo: {},
   userToken,
@@ -46,14 +48,52 @@ export const login = createAsyncThunk(
   }
 );
 
-export const createUser = createAsyncThunk(
-  "users/signup",
-  async ({ username, password, phone, email, gender }) => {
+export const createUser = createAsyncThunk("users/signup", async (newUser) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/users/signup`, newUser, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const getAlls = createAsyncThunk("users/getAlls", async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/users/getAlls`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const getAllRoles = createAsyncThunk("users/getAllRoles", async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/roles/getRoles`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const updateUser = createAsyncThunk(
+  "users/updateUser",
+  async ({ id, newUser }) => {
     try {
-      const userData = { username, password, phone, email, gender }; // Dữ liệu đăng ký
-      const response = await axios.post(
-        `${API_BASE_URL}/users/signup`,
-        userData,
+      const response = await axios.put(
+        `${API_BASE_URL}/users/updateUser/${id}`,
+        newUser,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -67,13 +107,16 @@ export const createUser = createAsyncThunk(
   }
 );
 
-export const getAlls = createAsyncThunk("users/getAlls", async () => {
+export const detailUser = createAsyncThunk("users/getDetailUser", async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/users/getAlls`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${API_BASE_URL}/users/getDetailUser/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -109,6 +152,17 @@ const authSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(getAllRoles.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getAllRoles.fulfilled, (state, action) => {
+        state.status = "done";
+        state.listRoles = action.payload; //action.payload ===== response.data
+      })
+      .addCase(getAllRoles.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(login.pending, (state, action) => {
         state.status = "loading";
         state.loading = true;
@@ -134,11 +188,33 @@ const authSlice = createSlice({
       .addCase(createUser.fulfilled, (state, action) => {
         state.status = "done";
         state.loading = false;
+        state.listUsers.push(action.payload);
         state.message = action.payload; //action.payload ===== response.data
       })
       .addCase(createUser.rejected, (state, action) => {
         state.status = "failed";
         state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.status = "done";
+        const updatedUser = action.payload;
+        const index = state.listUsers.findIndex(
+          (user) => user.id === updatedUser.id
+        );
+        if (index !== -1) {
+          state.listUsers[index] = updatedUser;
+        }
+      })
+      .addCase(detailUser.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(detailUser.fulfilled, (state, action) => {
+        state.status = "done";
+        state.user = action.payload;
+      })
+      .addCase(detailUser.rejected, (state, action) => {
+        state.status = "failed";
         state.error = action.error.message;
       });
   },
@@ -150,5 +226,7 @@ export const userReducer = authSlice.reducer;
 
 //selector
 export const selectAllUsers = (state) => state.userReducer.listUsers;
+export const selectUser = (state) => state.userReducer.user;
+export const selectAllRoles = (state) => state.userReducer.listRoles;
 
 export default userReducer;

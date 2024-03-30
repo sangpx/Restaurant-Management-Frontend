@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { foodInputs } from "./utils/formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import Home from "./pages/home/Home";
