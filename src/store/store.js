@@ -3,6 +3,7 @@ import foodReducer from "./food/foodSlice";
 import categoryReducer from './category/categorySlice';
 import userReducer from './auth/authSlice';
 import deskReducer from './desk/deskSlice';
+import bookingReducer from "./booking/bookingSlice";
 
 
 
@@ -14,5 +15,6 @@ export default configureStore({
     foodReducer,
     categoryReducer,
     deskReducer,
+    bookingReducer,
   },
 });

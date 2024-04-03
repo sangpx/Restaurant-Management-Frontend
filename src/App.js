@@ -16,6 +16,8 @@ import ListCategory from "./pages/category/list/List";
 import ListDesk from "./pages/desk/list/List.jsx";
 import NewDesk from "./pages/desk/new/New.jsx";
 import EditDesk from "./pages/desk/edit/Edit.jsx";
+import ListBooking from "./pages/booking/list/List.jsx";
+import NewBooking from "./pages/booking/new/New.jsx";
 
 
 function App() {
@@ -35,14 +37,8 @@ function App() {
             </Route>
             <Route path="foods">
               <Route index element={<ListFood />} />
-              <Route
-                path="new"
-                element={<NewFood title="Thêm mới" />}
-              />
-              <Route
-                path="edit/:id"
-                element={<EditFood title="Chỉnh sửa" />}
-              />
+              <Route path="new" element={<NewFood title="Thêm mới" />} />
+              <Route path="edit/:id" element={<EditFood title="Chỉnh sửa" />} />
             </Route>
             <Route path="categories">
               <Route index element={<ListCategory />} />
@@ -54,14 +50,12 @@ function App() {
             </Route>
             <Route path="desks">
               <Route index element={<ListDesk />} />
-              <Route
-                path="new"
-                element={<NewDesk title="Thêm mới" />}
-              />
-              <Route
-                path="edit/:id"
-                element={<EditDesk title="Chỉnh sửa" />}
-              />
+              <Route path="new" element={<NewDesk title="Thêm mới" />} />
+              <Route path="edit/:id" element={<EditDesk title="Chỉnh sửa" />} />
+            </Route>
+            <Route path="bookings">
+              <Route index element={<ListBooking />} />
+              <Route path="new" element={<NewBooking title="Thêm mới" />} />
             </Route>
           </Route>
         </Routes>
