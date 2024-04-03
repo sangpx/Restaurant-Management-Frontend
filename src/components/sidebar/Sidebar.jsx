@@ -64,39 +64,6 @@ const Sidebar = () => {
               <span>Quản lý Bàn ăn</span>
             </li>
           </Link>
-         
-        
-          {/* <p className="title">Quản lý đặt bàn</p>
-          <li>
-            <PersonOutlinedIcon className="icon" />
-            <span>Thêm yêu cầu đặt bàn</span>
-          </li>
-          <p className="title">Quản lý thanh toán</p>
-          <li>
-            <ReceiptIcon className="icon" />
-            <span>Lập hóa đơn</span>
-          </li> */}
-
-          <p className="title">Báo cáo thống kê</p>
-          <Link to="/report-day" style={{ textDecoration: "none" }}>
-            <li>
-              <AssessmentIcon className="icon" />
-              <span>Thống kê DT theo ngày</span>
-            </li>
-          </Link>
-          <Link to="/report-month" style={{ textDecoration: "none" }}>
-            <li>
-              <AssessmentIcon className="icon" />
-              <span>Thống kê DT theo tháng</span>
-            </li>
-          </Link>
-          <Link to="/report-bill" style={{ textDecoration: "none" }}>
-            <li>
-              <AssessmentIcon className="icon" />
-              <span>Thống kê hóa đơn</span>
-            </li>
-          </Link>
-
           <p className="title">Đăng xuất</p>
           <li>
             <Button onClick={handleLogout}>

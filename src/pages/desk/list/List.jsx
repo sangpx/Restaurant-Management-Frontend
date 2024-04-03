@@ -2,14 +2,26 @@ import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { deleteDesk, getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
-
+import {
+  deleteDesk,
+  getAlls,
+  selectAllDesks,
+} from "../../../store/desk/deskSlice";
 
 const getStatusName = (status) => {
   const statusMap = {
@@ -34,11 +46,10 @@ const ListDesk = () => {
   const dispatch = useDispatch();
   const desks = useSelector(selectAllDesks);
   const jwt = localStorage.getItem("accessToken");
-    const [deleteId, setDeleteId] = useState(null);
-    const [refresh, setRefresh] = useState(false);
-    const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [refresh, setRefresh] = useState(false);
+  const [open, setOpen] = useState(false);
 
- 
   const handleClickOpen = (id) => {
     setDeleteId(id);
     setOpen(true);
