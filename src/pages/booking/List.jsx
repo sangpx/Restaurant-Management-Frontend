@@ -11,44 +11,23 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAlls, selectAllDesks } from "../../../store/desk/deskSlice";
-import "./Booking.scss";
+import { getAlls, selectAllDesks } from "../../store/desk/deskSlice";
 import {
   createBooking,
   getAllBookings,
   selectAllBookings,
-} from "../../../store/booking/bookingSlice";
+} from "../../store/booking/bookingSlice";
 import RefreshIcon from "@mui/icons-material/Refresh";
-
-
-const getStatusName = (status) => {
-  const statusMap = {
-    EMPTY: "Trống",
-    BOOKED: "Đã đặt",
-    CLEANED: "Đã dọn dẹp",
-  };
-  return statusMap[status] || status;
-};
+import SidebarBooking from "../../components/sidebarBooking/SidebarBooking";
+import Tooltip from "@mui/material/Tooltip";
 
 const getStatusNameBooking = (status) => {
   const statusMapBooking = {
-    PENDING: "Đang chờ",
+    INACTIVE: "Đã hoàn thành",
     CONFIRMED: "Đã xác nhận",
   };
   return statusMapBooking[status] || status;
 };
-
-const columnsDesk = [
-  { field: "id", headerName: "Mã bàn", width: 130 },
-
-  { field: "name", headerName: "Tên bàn", width: 130 },
-  {
-    field: "status",
-    headerName: "Trạng thái",
-    width: 130,
-    valueGetter: (params) => getStatusName(params.value),
-  },
-];
 
 const columnsBookings = [
   {
@@ -91,12 +70,12 @@ const columnsBookings = [
     editable: true,
   },
 
-  // {
-  //   field: "status",
-  //   headerName: "Trạng thái",
-  //   width: 130,
-  //   valueGetter: (params) => getStatusNameBooking(params.value),
-  // },
+  {
+    field: "status",
+    headerName: "Trạng thái",
+    width: 130,
+    valueGetter: (params) => getStatusNameBooking(params.value),
+  },
 ];
 
 const ListBooking = () => {
@@ -105,29 +84,28 @@ const ListBooking = () => {
   const desks = useSelector(selectAllDesks);
   const bookings = useSelector(selectAllBookings);
   const [selectedDesk, setSelectedDesk] = useState("");
-   const [newBooking, setNewBooking] = useState({
-     customerName: "",
-     address: "",
-     quantityPerson: 0,
-     phone: "",
-     deskId: "",
-   });
+  const [newBooking, setNewBooking] = useState({
+    customerName: "",
+    address: "",
+    quantityPerson: 0,
+    phone: "",
+    deskId: "",
+  });
   const [refresh, setRefresh] = useState(false);
-  
- const handleRefresh = () => {
-   dispatch(getAllBookings());
-    dispatch(getAlls());
-   
- };
 
- const handleInputChange = (e) => {
-   const { name, value } = e.target;
-   setNewBooking((prevNewBooking) => ({
-     ...prevNewBooking,
-     [name]: name === "quantityPerson" ? parseInt(value) : value,
-   }));
- };
-  
+  const handleRefresh = () => {
+    dispatch(getAllBookings());
+    dispatch(getAlls());
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewBooking((prevNewBooking) => ({
+      ...prevNewBooking,
+      [name]: name === "quantityPerson" ? parseInt(value) : value,
+    }));
+  };
+
   const handleDeskChange = (e) => {
     setSelectedDesk(e.target.value);
   };
@@ -146,10 +124,10 @@ const ListBooking = () => {
 
   const handleAddBooking = (event) => {
     event.preventDefault();
-   const bookingData = {
-     ...newBooking,
-     deskId: selectedDesk,
-   };
+    const bookingData = {
+      ...newBooking,
+      deskId: selectedDesk,
+    };
     dispatch(createBooking(bookingData));
     setNewBooking([
       {
@@ -179,6 +157,7 @@ const ListBooking = () => {
 
   return (
     <div className="list">
+      <SidebarBooking />
       <div className="listContainer">
         <div className="new">
           <div className="newContainer">
@@ -186,46 +165,32 @@ const ListBooking = () => {
               <div className="datatableTitle">
                 <div className="datatableTitle-content">
                   <Button onClick={handleRefresh}>
-                    <RefreshIcon />
+                    <Tooltip title="Load lại">
+                      <RefreshIcon />
+                    </Tooltip>
                   </Button>
                 </div>
               </div>
             </div>
-            <div className="bottom">
-              <div className="left">
-                {/* {desks && desks.length > 0 ? (
-                  <Box sx={{ height: 580, width: "100%" }}>
+            <div className="bottom" style={{ flexDirection: "row" }}>
+              <div className="left" style={{ flex: "3 1" }}>
+                {bookings && bookings.length > 0 ? (
+                  <Box sx={{ height: 597, width: "100%" }}>
                     <DataGrid
-                      rows={desks}
-                      columns={columnsDesk}
+                      rows={bookings}
+                      columns={columnsBookings}
                       initialState={{
                         pagination: {
-                          pageSize: 10,
+                          pageSize: 8,
                         },
                       }}
                       pageSizeOptions={[5, 10]}
+                      disableSelectionOnClick
                     />
                   </Box>
                 ) : (
                   <CircularProgress />
-                )} */}
-                {bookings && bookings.length > 0 ? (
-                    <Box sx={{ height: 597, width: "100%" }}>
-                      <DataGrid
-                        rows={bookings}
-                        columns={columnsBookings}
-                        initialState={{
-                          pagination: {
-                            pageSize: 8,
-                          },
-                        }}
-                        pageSizeOptions={[5, 10]}
-                        disableSelectionOnClick
-                      />
-                    </Box>
-                  ) : (
-                    <CircularProgress />
-                  )}
+                )}
               </div>
               <div className="right">
                 <div
@@ -233,7 +198,7 @@ const ListBooking = () => {
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    padding: 20,
+                    padding: 10,
                   }}
                 >
                   <form onSubmit={handleAddBooking} method="post">
@@ -287,22 +252,24 @@ const ListBooking = () => {
                     </div>
                     <div className="formInput">
                       <FormControl sx={{ m: 1, minWidth: 200 }}>
-                        <InputLabel id="deskId">Mã bàn</InputLabel>
+                        <InputLabel id="deskId">Tên bàn</InputLabel>
                         <Select
                           className="input"
                           labelId="deskId"
                           id="deskId"
-                          label="Mã bàn"
+                          label="Tên bàn"
                           name="deskId"
                           value={selectedDesk}
                           onChange={handleDeskChange}
                         >
                           {desks &&
-                            desks.map((desk) => (
-                              <MenuItem key={desk.id} value={desk.id}>
-                                {desk.name}
-                              </MenuItem>
-                            ))}
+                            desks
+                              .filter((desk) => desk.status === "EMPTY")
+                              .map((desk) => (
+                                <MenuItem key={desk.id} value={desk.id}>
+                                  {desk.name}
+                                </MenuItem>
+                              ))}
                         </Select>
                       </FormControl>
                     </div>
@@ -311,41 +278,6 @@ const ListBooking = () => {
                       <Button type="submit">Thêm mới</Button>
                     </div>
                   </form>
-                </div>
-                <div style={{ flex: 1, padding: 10 }}>
-                  {/* {bookings && bookings.length > 0 ? (
-                    <Box sx={{ height: 200, width: "100%" }}>
-                      <DataGrid
-                        rows={bookings}
-                        columns={columnsBookings}
-                        initialState={{
-                          pagination: {
-                            pageSize: 8,
-                          },
-                        }}
-                        pageSizeOptions={[5, 10]}
-                        disableSelectionOnClick
-                      />
-                    </Box>
-                  ) : (
-                    <CircularProgress />
-                  )} */}
-                  {desks && desks.length > 0 ? (
-                    <Box sx={{ height: 200, width: "100%" }}>
-                      <DataGrid
-                        rows={desks}
-                        columns={columnsDesk}
-                        initialState={{
-                          pagination: {
-                            pageSize: 10,
-                          },
-                        }}
-                        pageSizeOptions={[5, 10]}
-                      />
-                    </Box>
-                  ) : (
-                    <CircularProgress />
-                  )}
                 </div>
               </div>
             </div>

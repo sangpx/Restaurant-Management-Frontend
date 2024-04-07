@@ -1,0 +1,121 @@
+.new {
+  width: 100%;
+  display: flex;
+
+  .newContainer {
+    flex: 6;
+
+    .top,
+    .bottom {
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 10px;
+      margin: 20px;
+      display: flex;
+
+      h1 {
+        color: lightgray;
+        font-size: 20px;
+      }
+
+      .left {
+        flex: 1;
+        text-align: center;
+
+        img {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+
+      .right {
+        flex: 2;
+
+        form {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+          justify-content: space-between !important;
+
+          .formInput {
+            width: 40%;
+
+            label {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+
+              .icon {
+                cursor: pointer;
+              }
+            }
+
+            input {
+              width: 100%;
+              padding: 5px;
+              border: none;
+              border-bottom: 1px solid gray;
+              outline: none;
+            }
+          }
+
+          button {
+            width: 150px;
+            padding: 10px;
+            border: none;
+            background-color: teal;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Thêm border cho bảng */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+/* Định dạng cột */
+th {
+  text-align: left;
+}
+
+/* Căn chỉnh văn bản */
+td {
+  text-align: center;
+}
+
+/* Tăng kích thước phông chữ */
+th,
+td {
+  font-size: 14px;
+}
+.cellAction {
+  display: flex;
+  justify-content: center;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+}
+
+.viewButton,
+.deleteButton {
+  margin-left: 5px;
+  cursor: pointer;
+}

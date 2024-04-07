@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { selectAllUsers, getAlls } from "../../../store/auth/authSlice";
+import Tooltip from "@mui/material/Tooltip";
 
 const getRoleName = (roles) => {
   const roleMap = {
@@ -66,7 +67,9 @@ const ListUser = () => {
               style={{ textDecoration: "none" }}
             >
               <div className="viewButton">
-                <EditIcon />
+                <Tooltip title="Chỉnh sửa">
+                  <EditIcon />
+                </Tooltip>
               </div>
             </Link>
           </div>
@@ -100,7 +103,9 @@ const ListUser = () => {
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
-                <RefreshIcon />
+                <Tooltip title="Load lại">
+                  <RefreshIcon />
+                </Tooltip>
               </Button>
             </div>
           </div>
