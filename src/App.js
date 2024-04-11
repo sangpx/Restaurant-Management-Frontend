@@ -16,9 +16,11 @@ import ListCategory from "./pages/category/list/List";
 import ListDesk from "./pages/desk/list/List.jsx";
 import NewDesk from "./pages/desk/new/New.jsx";
 import EditDesk from "./pages/desk/edit/Edit.jsx";
-import ListBooking from "./pages/booking/list/List.jsx";
-import NewBooking from "./pages/booking/new/New.jsx";
-
+import ListBooking from "./pages/booking/List.jsx";
+import ListInvoice from "./pages/invoice/list/List.jsx";
+import NewInvoice from "./pages/invoice/new/New.jsx";
+import AddFoodToInvoiceDetail from "./pages/invoice/addFoodToInvoice/AddFoodToInvoice.jsx";
+import CustomerHome from "./pages/customer/Customer.jsx";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -55,7 +57,20 @@ function App() {
             </Route>
             <Route path="bookings">
               <Route index element={<ListBooking />} />
-              <Route path="new" element={<NewBooking title="Thêm mới" />} />
+            </Route>
+            <Route path="invoices">
+              <Route index element={<ListInvoice />} />
+              <Route
+                path="new"
+                element={<NewInvoice title="Thêm mới hóa đơn" />}
+              />
+              <Route
+                path="addFoodToInvoice/:id"
+                element={<AddFoodToInvoiceDetail title="Gọi món" />}
+              />
+            </Route>
+            <Route path="home">
+              <Route index element={<CustomerHome />} />
             </Route>
           </Route>
         </Routes>

@@ -22,6 +22,7 @@ import {
   getAlls,
   selectAllDesks,
 } from "../../../store/desk/deskSlice";
+import Tooltip from "@mui/material/Tooltip";
 
 const getStatusName = (status) => {
   const statusMap = {
@@ -32,15 +33,7 @@ const getStatusName = (status) => {
   return statusMap[status] || status;
 };
 
-const columns = [
-  { field: "name", headerName: "Tên bàn", width: 330 },
-  {
-    field: "status",
-    headerName: "Trạng thái",
-    width: 330,
-    valueGetter: (params) => getStatusName(params.value),
-  },
-];
+const columns = [{ field: "name", headerName: "Tên bàn", width: 330 }];
 
 const ListDesk = () => {
   const dispatch = useDispatch();
@@ -83,7 +76,9 @@ const ListDesk = () => {
               style={{ textDecoration: "none" }}
             >
               <div className="viewButton">
-                <EditIcon />
+                <Tooltip title="Chỉnh sửa">
+                  <EditIcon />
+                </Tooltip>
               </div>
             </Link>
             {/* <div
@@ -123,7 +118,9 @@ const ListDesk = () => {
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
-                <RefreshIcon />
+                <Tooltip title="Load lại">
+                  <RefreshIcon />
+                </Tooltip>
               </Button>
             </div>
           </div>

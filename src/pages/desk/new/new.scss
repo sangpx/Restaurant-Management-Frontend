@@ -4,6 +4,7 @@
 
   .newContainer {
     flex: 6;
+    
 
     .top,
     .bottom {
@@ -12,6 +13,7 @@
       padding: 10px;
       margin: 20px;
       display: flex;
+      flex-direction: column;
 
       h1 {
         color: lightgray;

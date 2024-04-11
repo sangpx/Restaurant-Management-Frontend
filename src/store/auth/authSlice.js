@@ -107,21 +107,24 @@ export const updateUser = createAsyncThunk(
   }
 );
 
-export const detailUser = createAsyncThunk("users/getDetailUser", async (id) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/users/getDetailUser/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const detailUser = createAsyncThunk(
+  "users/getDetailUser",
+  async (id) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/users/getDetailUser/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
 
 export const logout = () => {
   localStorage.removeItem("accessToken");

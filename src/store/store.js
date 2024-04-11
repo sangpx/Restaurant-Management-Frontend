@@ -4,6 +4,7 @@ import categoryReducer from './category/categorySlice';
 import userReducer from './auth/authSlice';
 import deskReducer from './desk/deskSlice';
 import bookingReducer from "./booking/bookingSlice";
+import invoiceReducer from "./invoice/invoiceSlice";
 
 
 
@@ -16,5 +17,6 @@ export default configureStore({
     categoryReducer,
     deskReducer,
     bookingReducer,
+    invoiceReducer,
   },
 });

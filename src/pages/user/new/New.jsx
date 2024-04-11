@@ -27,9 +27,25 @@ const NewUser = ({ title }) => {
     phone: "",
     role: [],
   });
+
   useEffect(() => {
     dispatch(getAllRoles());
   }, [dispatch]);
+
+  const getRoleName = (roleName) => {
+    switch (roleName) {
+      case "ROLE_ADMIN":
+        return "Quản lý";
+      case "ROLE_RECEPTIONIST":
+        return "Lễ tân";
+      case "ROLE_CASHIER":
+        return "Thu ngân";
+      case "ROLE_USER":
+        return "Người dùng";
+      default:
+        return roleName;
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -142,7 +158,7 @@ const NewUser = ({ title }) => {
                     {roles &&
                       roles.map((role) => (
                         <MenuItem key={role.name} value={role.name}>
-                          {role.name}
+                          {getRoleName(role.name)}
                         </MenuItem>
                       ))}
                   </Select>

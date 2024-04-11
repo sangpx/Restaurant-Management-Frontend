@@ -12,18 +12,21 @@ const initialState = {
 
 const token = localStorage.getItem("accessToken");
 
-export const getAllBookings = createAsyncThunk("bookings/getAllBookings", async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/bookings/getAlls`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const getAllBookings = createAsyncThunk(
+  "bookings/getAllBookings",
+  async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/bookings/getAlls`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
 
 export const createBooking = createAsyncThunk(
   "bookings/createBooking",
@@ -46,13 +49,13 @@ export const createBooking = createAsyncThunk(
   }
 );
 
-export const updateBooking = createAsyncThunk(
-  "bookings/updateBooking",
-  async ({ categoryId, id, newFood }) => {
+export const customerAddBooking = createAsyncThunk(
+  "bookings/customerAddBooking",
+  async (newCustomerBooking) => {
     try {
-      const response = await axios.put(
-        `${API_BASE_URL}/foods/updateFood/${id}?categoryId=${categoryId}`,
-        newFood,
+      const response = await axios.post(
+        `${API_BASE_URL}/bookings/customerAddBooking`,
+        newCustomerBooking,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,37 +69,85 @@ export const updateBooking = createAsyncThunk(
   }
 );
 
-export const detailBooking = createAsyncThunk("bookings/getDetailBooking", async (id) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/bookings/getDetailBooking/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const holdingDeskCustomer = createAsyncThunk(
+  "bookings/holdingDeskCustomer",
+  async ({ bookingId, deskId }) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/bookings/holdingDeskCustomer?bookingId=${bookingId}&deskId=${deskId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("response holdingDeskCustomer: ", response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
 
-export const deleteBooking = createAsyncThunk("bookings/deleteBooking", async (id) => {
-  try {
-    const response = await axios.delete(
-      `${API_BASE_URL}/bookings/deleteBooking/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const confirmDeskCustomer = createAsyncThunk(
+  "bookings/confirmDeskCustomer",
+  async (bookingId) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/bookings/confirmDeskCustomer?bookingId=${bookingId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("response confirmDeskCustomer: ", response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
+
+export const detailBooking = createAsyncThunk(
+  "bookings/getDetailBooking",
+  async (id) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/bookings/getDetailBooking/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const deleteBooking = createAsyncThunk(
+  "bookings/deleteBooking",
+  async (id) => {
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/bookings/deleteBooking/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 const bookingSlice = createSlice({
   name: "bookings",

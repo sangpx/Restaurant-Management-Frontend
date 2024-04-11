@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
+import Tooltip from "@mui/material/Tooltip";
 
 const columns = [
   { field: "name", headerName: "Tên Món ăn", width: 330 },
@@ -21,7 +22,6 @@ const ListFood = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("accessToken");
   const foods = useSelector(selectAllFoods);
-
 
   const handleRefresh = () => {
     dispatch(getAlls());
@@ -40,7 +40,9 @@ const ListFood = () => {
               style={{ textDecoration: "none" }}
             >
               <div className="viewButton">
-                <EditIcon />
+                <Tooltip title="Chỉnh sửa">
+                  <EditIcon />
+                </Tooltip>
               </div>
             </Link>
           </div>
@@ -74,7 +76,9 @@ const ListFood = () => {
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
-                <RefreshIcon />
+                <Tooltip title="Load lại">
+                  <RefreshIcon />
+                </Tooltip>
               </Button>
             </div>
           </div>

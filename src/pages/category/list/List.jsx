@@ -22,6 +22,7 @@ import {
   getAlls,
   selectAllCategories,
 } from "../../../store/category/categorySlice";
+import Tooltip from "@mui/material/Tooltip";
 
 const columns = [{ field: "name", headerName: "Tên loại", width: 530 }];
 
@@ -66,7 +67,9 @@ const ListCategory = () => {
               style={{ textDecoration: "none" }}
             >
               <div className="viewButton">
-                <EditIcon />
+                <Tooltip title="Chỉnh sửa">
+                  <EditIcon />
+                </Tooltip>
               </div>
             </Link>
             {/* <div
@@ -106,7 +109,9 @@ const ListCategory = () => {
                 Thêm mới
               </Link>
               <Button onClick={handleRefresh}>
-                <RefreshIcon />
+                <Tooltip title="Load lại">
+                  <RefreshIcon />
+                </Tooltip>
               </Button>
             </div>
           </div>
