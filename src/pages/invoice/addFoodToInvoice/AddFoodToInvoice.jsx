@@ -23,15 +23,19 @@ import {
   addFoodToInvoice,
   deleteInvocie,
   getAllDetailInvoices,
+  getAllInvoices,
+  payInvoice,
   selectAllDetailInvoices,
   updateToInvoice,
 } from "../../../store/invoice/invoiceSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import Tooltip from "@mui/material/Tooltip";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import PaymentIcon from "@mui/icons-material/Payment";
+import PrintIcon from "@mui/icons-material/Print";
 
 const AddFoodToInvoiceDetail = ({ title }) => {
   const columnsInvoiceDetail = [
@@ -70,6 +74,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
       headerName: "Thành tiền",
       width: 150,
       editable: true,
+      valueFormatter: (params) => formatIntoMoney(params.value),
     },
   ];
 
@@ -86,10 +91,12 @@ const AddFoodToInvoiceDetail = ({ title }) => {
   const [editedQuantity, setEditedQuantity] = useState(0);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedRowToDelete, setSelectedRowToDelete] = useState(null);
-
-  const handleOpenDeleteDialog = (row) => {
-    setSelectedRowToDelete(row);
-    setOpenDeleteDialog(true);
+  // Hàm định dạng giá trị tiền thành VNĐ
+  const formatIntoMoney = (value) => {
+    return value.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
   };
 
   const handleDeleteRow = (row) => {
@@ -97,6 +104,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
     setOpenDeleteDialog(true);
   };
 
+  //Xử lý khi ấn Xóa
   const handleConfirmDelete = () => {
     dispatch(
       deleteInvocie({
@@ -120,7 +128,6 @@ const AddFoodToInvoiceDetail = ({ title }) => {
 
   const handleSaveEdit = () => {
     dispatch(updateToInvoice({ ...selectedRow, quantity: editedQuantity }));
-    console.log("data: ", selectedRow);
     setOpenEditModal(false);
     dispatch(getAllDetailInvoices(id));
   };
@@ -177,6 +184,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
     dispatch(getAlls());
   }, [dispatch, refresh]);
 
+  //Xử lý ô input quantity
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
     if (!isNaN(value) && value >= 0) {
@@ -201,6 +209,27 @@ const AddFoodToInvoiceDetail = ({ title }) => {
     navigate("/invoices");
   };
 
+  const calculateTotalAmount = () => {
+    let sum = 0;
+    invoiceDetails.forEach((row) => {
+      sum += row.intoMoney;
+    });
+    return sum;
+  };
+
+  // Định dạng tổng tiền thành VNĐ
+  const formattedTotalAmount = calculateTotalAmount().toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
+  const handlePayment = (invoiceId) => {
+    dispatch(payInvoice(invoiceId));
+    alert("Thanh toán thành công!");
+    navigate("/invoices");
+    dispatch(getAllInvoices());
+  };
+
   return (
     <div className="new">
       <SidebarInvoice />
@@ -210,7 +239,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
         </div>
         <div className="bottom">
           <div className="right">
-            <form onSubmit={handleOrderFood} method="post">
+            <form onSubmit={handleOrderFood} method="post" className="form">
               <div className="formInput">
                 <TextField
                   className="input"
@@ -236,7 +265,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
                   value={quantity}
                   onChange={handleQuantityChange}
                   inputProps={{
-                    min: "0", // Không cho phép nhập số âm
+                    min: "0",
                   }}
                 />
               </div>
@@ -261,75 +290,27 @@ const AddFoodToInvoiceDetail = ({ title }) => {
                 </FormControl>
               </div>
               <div className="formButton">
-                <button onClick={handleCancel}>Hủy</button>
-                <button type="submit">Gọi món</button>
+                <Button onClick={handleCancel}>Hủy</Button>
+                <Button type="submit">Gọi món</Button>
               </div>
             </form>
           </div>
+
           <div className="right" style={{ marginTop: 20 }}>
-            <Button onClick={handleRefresh}>
-              <Tooltip title="Load lại">
-                <RefreshIcon />
-              </Tooltip>
-            </Button>
-
-            {/* Table */}
-            {/* <div style={{ flex: 1, padding: 10 }}>
-              {invoiceDetails && invoiceDetails.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      {columnsInvoiceDetail.map((column) => (
-                        <th
-                          key={column.field}
-                          style={{ width: column.width, textAlign: "center" }}
-                        >
-                          {column.headerName}
-                        </th>
-                      ))}
-                      <th style={{ textAlign: "center" }}>Tác vụ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoiceDetails.map((row) => (
-                      <tr key={row.foodId}>
-                        <td>{row.invoiceId}</td>
-                        <td>{row.foodId}</td>
-                        <td>{row.nameFood}</td>
-                        <td>{row.quantity}</td>
-                        <td>{row.intoMoney}</td>
-                        <td>
-                          <div className="cellAction">
-                            <div className="actionButtons">
-                              <div
-                                className="viewButton"
-                                onClick={() => handleEditRow(row)}
-                                style={{ cursor: "pointer" }}
-                              >
-                                <Tooltip title="Chỉnh sửa">
-                                  <EditIcon />
-                                </Tooltip>
-                              </div>
-                              <div
-                                className="deleteButton"
-                                style={{ cursor: "pointer", marginLeft: 10 }}
-                              >
-                                <Tooltip title="Xóa">
-                                  <CloseIcon />
-                                </Tooltip>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <CircularProgress />
-              )}
-            </div> */}
-
+            <div
+              className="right-top"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <span>Tổng tiền: {formattedTotalAmount}</span>
+              <div className="right-top_left"></div>
+              <div className="right-top_left">
+                <Button onClick={handleRefresh}>
+                  <Tooltip title="Load lại">
+                    <RefreshIcon />
+                  </Tooltip>
+                </Button>
+              </div>
+            </div>
             {/* DataGrid */}
             <div style={{ flex: 1, padding: 10 }}>
               {invoiceDetails && invoiceDetails.length > 0 ? (
@@ -352,8 +333,39 @@ const AddFoodToInvoiceDetail = ({ title }) => {
               )}
             </div>
           </div>
+          <div className="right" style={{ marginTop: 20 }}>
+            <div
+              className="right-top"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <div className="form">
+                <div
+                  className="right-top_left"
+                  onClick={() => handlePayment(id)}
+                >
+                  <div className="formButton">
+                    <Button>
+                      <Tooltip title="Thanh toán">
+                        <PaymentIcon />
+                      </Tooltip>
+                    </Button>
+                  </div>
+                </div>
+                <div className="right-top_left">
+                  <div className="formButton">
+                    <Button>
+                      <Tooltip title="In Hóa đơn">
+                        <PrintIcon />
+                      </Tooltip>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
       <Modal open={openEditModal} onClose={handleCloseEditModal}>
         <div
           style={{

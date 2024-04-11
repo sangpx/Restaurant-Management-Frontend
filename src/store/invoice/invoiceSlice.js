@@ -131,18 +131,18 @@ export const deleteInvocie = createAsyncThunk(
 );
 
 export const payInvoice = createAsyncThunk(
-  "invoices/payInvoice",
-  async (id) => {
+  "invoices/pay",
+  async (invoiceId) => {
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/invoices/${id}/invoices`,
+        `${API_BASE_URL}/invoices/${invoiceId}/pay`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("response.data payInvoice: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -193,6 +193,19 @@ const invoiceSlice = createSlice({
       .addCase(addFoodToInvoice.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(payInvoice.fulfilled, (state, action) => {
+        state.status = "done";
+        // Kiểm tra action.payload có tồn tại không
+        if (action.payload) {
+          // Cập nhật trạng thái của hóa đơn đã thanh toán
+          const updatedInvoice = state.listInvoices.find(
+            (invoice) => invoice.id === action.payload.id
+          );
+          if (updatedInvoice) {
+            updatedInvoice.status = "PAID";
+          }
+        }
       });
   },
 });

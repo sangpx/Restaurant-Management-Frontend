@@ -1,7 +1,61 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { customerAddBooking } from "../../store/booking/bookingSlice";
 
 const CustomerHome = () => {
+  const dispatch = useDispatch();
+  const [newCustomerBooking, setNewCustomerBooking] = useState({});
+
+  const handleInputChange = useCallback((e) => {
+    setNewCustomerBooking((prevCustomerBooking) => ({
+      ...prevCustomerBooking,
+      [e.target.name]: e.target.value,
+    }));
+  }, []);
+
+  const handleQuantityChange = (event) => {
+    const value = event.target.value;
+
+    // Kiểm tra xem giá trị có phải là số không
+    if (!isNaN(value) && parseInt(value) >= 0) {
+      setNewCustomerBooking({
+        ...newCustomerBooking,
+        quantityPerson: parseInt(value),
+      });
+    }
+  };
+
+  const formatBookingTime = (dateTimeString) => {
+    // Tạo một đối tượng Date từ chuỗi thời gian
+    const dateTime = new Date(dateTimeString);
+
+    // Lấy các thành phần của thời gian: ngày, tháng, năm, giờ, phút
+    const year = dateTime.getFullYear();
+    const month = (dateTime.getMonth() + 1).toString().padStart(2, "0"); // Thêm số 0 phía trước nếu cần
+    const day = dateTime.getDate().toString().padStart(2, "0");
+    const hours = dateTime.getHours().toString().padStart(2, "0");
+    const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+
+    // Tạo chuỗi định dạng mới, ví dụ: "YYYY-MM-DD HH:MM"
+    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+    return formattedDateTime;
+  };
+
+  const handleCustomerAddBooking = (event) => {
+    event.preventDefault();
+    dispatch(customerAddBooking(newCustomerBooking));
+    setNewCustomerBooking({
+      customerName: "",
+      email: "",
+      phone: "",
+      address: "",
+      bookingTime: "",
+      quantityPerson: 0,
+    });
+  };
+
   return (
     <>
       <section
@@ -10,10 +64,10 @@ const CustomerHome = () => {
       >
         <div className="container-fluid container-xl d-flex align-items-center justify-content-center justify-content-lg-start">
           <i className="bi bi-phone d-flex align-items-center">
-            <span>+1 5589 55488 55</span>
+            <span>+84 24 3333 1701</span>
           </i>
           <i className="bi bi-clock ms-4 d-none d-lg-flex align-items-center">
-            <span>Mon-Sat: 11:00 AM - 23:00 PM</span>
+            <span>T2-T7: 6h00 - 22h00</span>
           </i>
         </div>
       </section>
@@ -45,11 +99,6 @@ const CustomerHome = () => {
                 </a>
               </li>
               <li>
-                <a className="nav-link scrollto" href="#events">
-                  Sự kiện
-                </a>
-              </li>
-              <li>
                 <a className="nav-link scrollto" href="#gallery">
                   Ảnh
                 </a>
@@ -78,25 +127,71 @@ const CustomerHome = () => {
             ></ol>
 
             <div className="carousel-inner" role="listbox">
-              <div className="carousel-item active">
+              {/* Slide 1 */}
+              <div
+                className="carousel-item active"
+                style={{
+                  backgroundImage: `url(assets/img/slide/slide-1.jpg)`,
+                }}
+              >
                 <div className="carousel-container">
                   <div className="carousel-content">
                     <h2 className="animate__animated animate__fadeInDown">
                       <span>Grill</span> 63
                     </h2>
                     <p className="animate__animated animate__fadeInUp">
-                      Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea
-                      ut et est quaerat sequi nihil ut aliquam. Occaecati alias
-                      dolorem mollitia ut. Similique ea voluptatem. Esse
-                      doloremque accusamus repellendus deleniti vel. Minus et
-                      tempore modi architecto.
+                      Nhà hàng Grill63 của Khách sạn LOTTE Hà Nội phục vụ bò bít
+                      tết hảo hạng và danh mục rượu vang thượng hạng ngay tại
+                      trung tâm thành phố. Với phong cách bài trí hiện đại,
+                      Grill63 là nơi lý tưởng cho những dịp đặc biệt hoặc bữa
+                      tối lãng mạn với tầm nhìn toàn cảnh Hà Nội trên tầng 63.
+                      Hãy đến để tận hưởng trải nghiệm ẩm thực tinh tuý ở nơi
+                      đây.
                     </p>
                     <div>
                       <a
                         href="#menu"
                         className="btn-menu animate__animated animate__fadeInUp scrollto"
                       >
-                        Menu của chúng tôi
+                        Menu
+                      </a>
+                      <a
+                        href="#book-a-table"
+                        className="btn-book animate__animated animate__fadeInUp scrollto"
+                      >
+                        Đặt bàn
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Slide 2 */}
+              <div
+                className="carousel-item"
+                style={{
+                  backgroundImage: `url(assets/img/slide/slide-2.jpg)`,
+                }}
+              >
+                <div className="carousel-container">
+                  <div className="carousel-content">
+                    <h2 className="animate__animated animate__fadeInDown">
+                      <span>Grill</span> 63
+                    </h2>
+                    <p className="animate__animated animate__fadeInUp">
+                      Nhà hàng Grill63 của Khách sạn LOTTE Hà Nội phục vụ bò bít
+                      tết hảo hạng và danh mục rượu vang thượng hạng ngay tại
+                      trung tâm thành phố. Với phong cách bài trí hiện đại,
+                      Grill63 là nơi lý tưởng cho những dịp đặc biệt hoặc bữa
+                      tối lãng mạn với tầm nhìn toàn cảnh Hà Nội trên tầng 63.
+                      Hãy đến để tận hưởng trải nghiệm ẩm thực tinh tuý ở nơi
+                      đây.
+                    </p>
+                    <div>
+                      <a
+                        href="#menu"
+                        className="btn-menu animate__animated animate__fadeInUp scrollto"
+                      >
+                        Menu
                       </a>
                       <a
                         href="#book-a-table"
@@ -109,82 +204,37 @@ const CustomerHome = () => {
                 </div>
               </div>
 
-              <div className="carousel-item">
-                {/*  style="background-image: url(assets/img/slide/slide-2.jpg);" */}
-                <div className="carousel-container">
-                  <div className="carousel-content">
-                    <h2 className="animate__animated animate__fadeInDown">
-                      Lorem Ipsum Dolor
-                    </h2>
-                    <p className="animate__animated animate__fadeInUp">
-                      Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea
-                      ut et est quaerat sequi nihil ut aliquam. Occaecati alias
-                      dolorem mollitia ut. Similique ea voluptatem. Esse
-                      doloremque accusamus repellendus deleniti vel. Minus et
-                      tempore modi architecto.
-                    </p>
-                    <div>
-                      <a
-                        href="#book-a-table"
-                        className="btn-book animate__animated animate__fadeInUp scrollto"
-                      >
-                        Đặt bàn
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Slide 3 */}
+              <div
+                className="carousel-item"
+                style={{
+                  backgroundImage: `url(assets/img/slide/slide-3.jpg)`,
+                }}
+              ></div>
+              <a
+                className="carousel-control-prev"
+                href="#heroCarousel"
+                role="button"
+                data-bs-slide="prev"
+              >
+                <span
+                  className="carousel-control-prev-icon bi bi-chevron-left"
+                  aria-hidden="true"
+                ></span>
+              </a>
 
-              <div className="carousel-item">
-                {/*  style="background-image: url(assets/img/slide/slide-3.jpg);" */}
-                <div className="carousel-container">
-                  <div className="carousel-content">
-                    <h2 className="animate__animated animate__fadeInDown">
-                      Sequi ea ut et est quaerat
-                    </h2>
-                    <p className="animate__animated animate__fadeInUp">
-                      Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea
-                      ut et est quaerat sequi nihil ut aliquam. Occaecati alias
-                      dolorem mollitia ut. Similique ea voluptatem. Esse
-                      doloremque accusamus repellendus deleniti vel. Minus et
-                      tempore modi architecto.
-                    </p>
-                    <div>
-                      <a
-                        href="#book-a-table"
-                        className="btn-book animate__animated animate__fadeInUp scrollto"
-                      >
-                        Đặt bàn
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <a
+                className="carousel-control-next"
+                href="#heroCarousel"
+                role="button"
+                data-bs-slide="next"
+              >
+                <span
+                  className="carousel-control-next-icon bi bi-chevron-right"
+                  aria-hidden="true"
+                ></span>
+              </a>
             </div>
-
-            <a
-              className="carousel-control-prev"
-              href="#heroCarousel"
-              role="button"
-              data-bs-slide="prev"
-            >
-              <span
-                className="carousel-control-prev-icon bi bi-chevron-left"
-                aria-hidden="true"
-              ></span>
-            </a>
-
-            <a
-              className="carousel-control-next"
-              href="#heroCarousel"
-              role="button"
-              data-bs-slide="next"
-            >
-              <span
-                className="carousel-control-next-icon bi bi-chevron-right"
-                aria-hidden="true"
-              ></span>
-            </a>
           </div>
         </div>
       </section>
@@ -193,10 +243,18 @@ const CustomerHome = () => {
         <section id="about" className="about">
           <div className="container-fluid">
             <div className="row">
-              <div className="col-lg-5 align-items-stretch video-box">
-                {/*  style='background-image: url("assets/img/about.jpg");' */}
+              <div
+                className="col-lg-5 align-items-stretch video-box"
+                style={{
+                  backgroundImage: `url(assets/img/about.jpg)`,
+                }}
+                onClick={() =>
+                  (window.location.href =
+                    "https://www.tiktok.com/@mrsky.official/video/7124289467942440218")
+                }
+              >
                 <a
-                  href="https://www.youtube.com/watch?v=jDDaplaOz7Q"
+                  href="https://www.tiktok.com/@mrsky.official/video/7124289467942440218"
                   className="venobox play-btn mb-4"
                   data-vbtype="video"
                   data-autoplay="true"
@@ -206,41 +264,40 @@ const CustomerHome = () => {
               <div className="col-lg-7 d-flex flex-column justify-content-center align-items-stretch">
                 <div className="content">
                   <h3>
-                    Eum ipsam laborum deleniti{" "}
-                    <strong>velit pariatur architecto aut nihil</strong>
+                    Trải nghiệm ẩm thực độc đáo trong không gian sang trọng,
+                    hiện đại tại
+                    <strong> Grill 63</strong>
                   </h3>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Duis aute irure dolor in reprehenderit
-                  </p>
-                  <p className="fst-italic">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Nhà hàng Grill 63 nổi bật với vị trí đắc địa, nằm ngay trong
+                    khuôn viên của tòa nhà cao ốc Lotte Center, tọa lạc giữa khu
+                    trung tâm Hà Nội. Cũng chính vì thế, du khách không những
+                    được thưởng thức những món ăn tại đây mà còn được chiêm view
+                    nhìn toàn cảnh tuyệt vời. Bên cạnh đó, không gian sang trọng
+                    bên trong cũng là một trong những yếu tố đặc trưng không thể
+                    bỏ qua khi nhắc đến nhà hàng Grill 63 này.
                   </p>
                   <ul>
                     <li>
-                      <i className="bx bx-check-double"></i> Ullamco laboris
-                      nisi ut aliquip ex ea commodo consequat.
+                      <i className="bx bx-check-double"></i> Thực đơn vô cùng đa
+                      dạng, phong phú tại Grill 63.
                     </li>
                     <li>
-                      <i className="bx bx-check-double"></i> Duis aute irure
-                      dolor in reprehenderit in voluptate velit.
+                      <i className="bx bx-check-double"></i> Không gian nhà hàng
+                      sang trọng, hiện đại.
                     </li>
                     <li>
-                      <i className="bx bx-check-double"></i> Ullamco laboris
-                      nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                      dolor in reprehenderit in voluptate trideta storacalaperda
-                      mastiro dolore eu fugiat nulla pariatur.
+                      <i className="bx bx-check-double"></i> Đội ngũ nhân viên
+                      chu đáo, chuyên nghiệp.
                     </li>
                   </ul>
                   <p>
-                    Ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum
+                    Để cảm nhận vẻ đẹp trọn vẹn nhất của nhà hàng Grill 63, hãy
+                    đến đây vào buổi chiều tối. Khi ánh mặt trời đang dần khuất,
+                    thực khách có dịp ngắm cảnh hoàng hôn view cao. Tối đến,
+                    thành phố lên đèn, vẻ đẹp lung linh, mờ ảo “động lòng
+                    người”. Bữa tối bên cạnh gia đình hay người thương sẽ thêm
+                    phần ấm áp.
                   </p>
                 </div>
               </div>
@@ -252,11 +309,11 @@ const CustomerHome = () => {
           <div className="container">
             <div className="section-title">
               <h2>
-                Why choose <span>Our Restaurant</span>
+                Tại sao lại chọn<span> nhà hàng của chúng tôi</span>
               </h2>
               <p>
-                Ut possimus qui ut temporibus culpa velit eveniet modi omnis est
-                adipisci expedita at voluptas atque vitae autem.
+                Grill63 là nơi lý tưởng cho những dịp đặc biệt hoặc bữa tối lãng
+                mạn
               </p>
             </div>
 
@@ -264,10 +321,10 @@ const CustomerHome = () => {
               <div className="col-lg-4">
                 <div className="box">
                   <span>01</span>
-                  <h4>Lorem Ipsum</h4>
+                  <h4>Những món ngon đa dạng, hấp dẫn</h4>
                   <p>
-                    Ulamco laboris nisi ut aliquip ex ea commodo consequat. Et
-                    consectetur ducimus vero placeat
+                    Ghé thăm một khu vực buffet với những món ngon được trưng
+                    bày với nhiều màu sắc khác nhau
                   </p>
                 </div>
               </div>
@@ -275,10 +332,10 @@ const CustomerHome = () => {
               <div className="col-lg-4 mt-4 mt-lg-0">
                 <div className="box">
                   <span>02</span>
-                  <h4>Repellat Nihil</h4>
+                  <h4>Vẻ đẹp hiện đại, sang trọng</h4>
                   <p>
-                    Dolorem est fugiat occaecati voluptate velit esse. Dicta
-                    veritatis dolor quod et vel dire leno para dest
+                    Những vật dụng nội thất từ bé đến lớn đều được trang bị tỉ
+                    mỉ, phù hợp với không gian chung
                   </p>
                 </div>
               </div>
@@ -286,160 +343,14 @@ const CustomerHome = () => {
               <div className="col-lg-4 mt-4 mt-lg-0">
                 <div className="box">
                   <span>03</span>
-                  <h4> Ad ad velit qui</h4>
+                  <h4>Đầu bếp chuyên nghiệp, tỉ mỉ</h4>
                   <p>
-                    Molestiae officiis omnis illo asperiores. Aut doloribus
-                    vitae sunt debitis quo vel nam quis
+                    Với trình độ chuyên môn và niềm đam mê với nghề, họ luôn
+                    biết cách làm hài lòng thực khách của mình qua những hương
+                    vị được “gửi gắm” trong từng món ăn.
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="events" className="events">
-          <div className="container">
-            <div className="section-title">
-              <h2>
-                Organize Your <span>Events</span> in our Restaurant
-              </h2>
-            </div>
-
-            <div className="events-slider swiper">
-              <div className="swiper-wrapper">
-                <div className="swiper-slide">
-                  <div className="row event-item">
-                    <div className="col-lg-6">
-                      <img
-                        src="assets/img/event-birthday.jpg"
-                        className="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div className="col-lg-6 pt-4 pt-lg-0 content">
-                      <h3>Birthday Parties</h3>
-                      <div className="price">
-                        <p>
-                          <span>$189</span>
-                        </p>
-                      </div>
-                      <p className="fst-italic">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
-                      </p>
-                      <ul>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Duis aute irure
-                          dolor in reprehenderit in voluptate velit.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                      </ul>
-                      <p>
-                        Ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="swiper-slide">
-                  <div className="row event-item">
-                    <div className="col-lg-6">
-                      <img
-                        src="assets/img/event-private.jpg"
-                        className="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div className="col-lg-6 pt-4 pt-lg-0 content">
-                      <h3>Private Parties</h3>
-                      <div className="price">
-                        <p>
-                          <span>$290</span>
-                        </p>
-                      </div>
-                      <p className="fst-italic">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
-                      </p>
-                      <ul>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Duis aute irure
-                          dolor in reprehenderit in voluptate velit.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                      </ul>
-                      <p>
-                        Ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="swiper-slide">
-                  <div className="row event-item">
-                    <div className="col-lg-6">
-                      <img
-                        src="assets/img/event-custom.jpg"
-                        className="img-fluid"
-                        alt=""
-                      />
-                    </div>
-                    <div className="col-lg-6 pt-4 pt-lg-0 content">
-                      <h3>Custom Parties</h3>
-                      <div className="price">
-                        <p>
-                          <span>$99</span>
-                        </p>
-                      </div>
-                      <p className="fst-italic">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua.
-                      </p>
-                      <ul>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Duis aute irure
-                          dolor in reprehenderit in voluptate velit.
-                        </li>
-                        <li>
-                          <i className="bi bi-check-circle"></i> Ullamco laboris
-                          nisi ut aliquip ex ea commodo consequat.
-                        </li>
-                      </ul>
-                      <p>
-                        Ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="swiper-pagination"></div>
             </div>
           </div>
         </section>
@@ -450,28 +361,29 @@ const CustomerHome = () => {
               <h2>
                 Đặt <span>Bàn</span>
               </h2>
-              <p>
-                Ut possimus qui ut temporibus culpa velit eveniet modi omnis est
-                adipisci expedita at voluptas atque vitae autem.
-              </p>
+              <p>Khách hàng có thể đặt trước bàn tại đây.</p>
             </div>
 
+            {/* Form đặt bàn */}
             <form
               action="forms/book-a-table.php"
               method="post"
               role="form"
               className="php-email-form"
+              onSubmit={handleCustomerAddBooking}
             >
               <div className="row">
                 <div className="col-lg-4 col-md-6 form-group">
                   <input
                     type="text"
-                    name="name"
+                    name="customerName"
                     className="form-control"
                     id="name"
-                    placeholder="Your Name"
+                    placeholder="Tên khách hàng"
                     data-rule="minlen:4"
                     data-msg="Please enter at least 4 chars"
+                    value={newCustomerBooking.customerName}
+                    onChange={handleInputChange}
                   />
                   <div className="validate"></div>
                 </div>
@@ -481,9 +393,11 @@ const CustomerHome = () => {
                     className="form-control"
                     name="email"
                     id="email"
-                    placeholder="Your Email"
+                    placeholder="Email"
                     data-rule="email"
                     data-msg="Please enter a valid email"
+                    value={newCustomerBooking.email}
+                    onChange={handleInputChange}
                   />
                   <div className="validate"></div>
                 </div>
@@ -493,33 +407,40 @@ const CustomerHome = () => {
                     className="form-control"
                     name="phone"
                     id="phone"
-                    placeholder="Your Phone"
+                    placeholder="Số điện thoại"
                     data-rule="minlen:4"
                     data-msg="Please enter at least 4 chars"
+                    value={newCustomerBooking.phone}
+                    onChange={handleInputChange}
                   />
                   <div className="validate"></div>
                 </div>
                 <div className="col-lg-4 col-md-6 form-group mt-3">
                   <input
                     type="text"
-                    name="date"
+                    name="address"
                     className="form-control"
-                    id="date"
-                    placeholder="Date"
+                    id="address"
+                    placeholder="Địa chỉ"
                     data-rule="minlen:4"
                     data-msg="Please enter at least 4 chars"
+                    value={newCustomerBooking.address}
+                    onChange={handleInputChange}
                   />
                   <div className="validate"></div>
                 </div>
                 <div className="col-lg-4 col-md-6 form-group mt-3">
                   <input
-                    type="text"
+                    type="datetime-local"
                     className="form-control"
-                    name="time"
+                    name="bookingTime"
                     id="time"
-                    placeholder="Time"
+                    placeholder="Thời gian đặt"
                     data-rule="minlen:4"
                     data-msg="Please enter at least 4 chars"
+                    // value={newCustomerBooking.bookingTime}
+                    value={formatBookingTime(newCustomerBooking.bookingTime)}
+                    onChange={handleInputChange}
                   />
                   <div className="validate"></div>
                 </div>
@@ -527,34 +448,19 @@ const CustomerHome = () => {
                   <input
                     type="number"
                     className="form-control"
-                    name="people"
+                    name="quantityPerson"
                     id="people"
-                    placeholder="# of people"
+                    placeholder="Số lượng người"
                     data-rule="minlen:1"
                     data-msg="Please enter at least 1 chars"
+                    value={newCustomerBooking.quantityPerson}
+                    onChange={handleQuantityChange}
                   />
                   <div className="validate"></div>
                 </div>
               </div>
-              <div className="form-group mt-3">
-                <textarea
-                  className="form-control"
-                  name="message"
-                  rows="5"
-                  placeholder="Message"
-                ></textarea>
-                <div className="validate"></div>
-              </div>
-              <div className="mb-3">
-                <div className="loading">Loading</div>
-                <div className="error-message"></div>
-                <div className="sent-message">
-                  Your booking request was sent. We will call back or send an
-                  Email to confirm your reservation. Thank you!
-                </div>
-              </div>
               <div className="text-center">
-                <button type="submit">Send Message</button>
+                <button type="submit">Đặt bàn</button>
               </div>
             </form>
           </div>
@@ -564,11 +470,10 @@ const CustomerHome = () => {
           <div className="container-fluid">
             <div className="section-title">
               <h2>
-                Some photos from <span>Our Restaurant</span>
+                Một số ảnh từ <span>nhà hàng của chúng tôi</span>
               </h2>
               <p>
-                Ut possimus qui ut temporibus culpa velit eveniet modi omnis est
-                adipisci expedita at voluptas atque vitae autem.
+                Hãy đến để tận hưởng trải nghiệm ẩm thực tinh tuý ở nơi đây.
               </p>
             </div>
 
@@ -707,118 +612,13 @@ const CustomerHome = () => {
                 <div className="swiper-slide">
                   <div className="testimonial-item">
                     <img
-                      src="assets/img/testimonials/testimonials-1.jpg"
-                      className="testimonial-img"
-                      alt=""
-                    />
-                    <h3>Saul Goodman</h3>
-                    <h4>Ceo &amp; Founder</h4>
-                    <div className="stars">
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                    </div>
-                    <p>
-                      <i className="bx bxs-quote-alt-left quote-icon-left"></i>
-                      Proin iaculis purus consequat sem cure digni ssim donec
-                      porttitora entum suscipit rhoncus. Accusantium quam,
-                      ultricies eget id, aliquam eget nibh et. Maecen aliquam,
-                      risus at semper.
-                      <i className="bx bxs-quote-alt-right quote-icon-right"></i>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="swiper-slide">
-                  <div className="testimonial-item">
-                    <img
-                      src="assets/img/testimonials/testimonials-2.jpg"
-                      className="testimonial-img"
-                      alt=""
-                    />
-                    <h3>Sara Wilsson</h3>
-                    <h4>Designer</h4>
-                    <div className="stars">
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                    </div>
-                    <p>
-                      <i className="bx bxs-quote-alt-left quote-icon-left"></i>
-                      Export tempor illum tamen malis malis eram quae irure esse
-                      labore quem cillum quid cillum eram malis quorum velit
-                      fore eram velit sunt aliqua noster fugiat irure amet legam
-                      anim culpa.
-                      <i className="bx bxs-quote-alt-right quote-icon-right"></i>
-                    </p>
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="testimonial-item">
-                    <img
-                      src="assets/img/testimonials/testimonials-3.jpg"
-                      className="testimonial-img"
-                      alt=""
-                    />
-                    <h3>Jena Karlis</h3>
-                    <h4>Store Owner</h4>
-                    <div className="stars">
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                    </div>
-                    <p>
-                      <i className="bx bxs-quote-alt-left quote-icon-left"></i>
-                      Enim nisi quem export duis labore cillum quae magna enim
-                      sint quorum nulla quem veniam duis minim tempor labore
-                      quem eram duis noster aute amet eram fore quis sint minim.
-                      <i className="bx bxs-quote-alt-right quote-icon-right"></i>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="swiper-slide">
-                  <div className="testimonial-item">
-                    <img
-                      src="assets/img/testimonials/testimonials-4.jpg"
-                      className="testimonial-img"
-                      alt=""
-                    />
-                    <h3>Matt Brandon</h3>
-                    <h4>Freelancer</h4>
-                    <div className="stars">
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                      <i className="bi bi-star-fill"></i>
-                    </div>
-                    <p>
-                      <i className="bx bxs-quote-alt-left quote-icon-left"></i>
-                      Fugiat enim eram quae cillum dolore dolor amet nulla culpa
-                      multos export minim fugiat minim velit minim dolor enim
-                      duis veniam ipsum anim magna sunt elit fore quem dolore
-                      labore illum veniam.
-                      <i className="bx bxs-quote-alt-right quote-icon-right"></i>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="swiper-slide">
-                  <div className="testimonial-item">
-                    <img
                       src="assets/img/testimonials/testimonials-5.jpg"
                       className="testimonial-img"
                       alt=""
                     />
-                    <h3>John Larson</h3>
-                    <h4>Entrepreneur</h4>
+                    <h3>Nguyễn Văn Anh</h3>
+                    {/* <h4>Ceo &amp; Founder</h4> */}
+                    Khách hàng
                     <div className="stars">
                       <i className="bi bi-star-fill"></i>
                       <i className="bi bi-star-fill"></i>
@@ -828,10 +628,7 @@ const CustomerHome = () => {
                     </div>
                     <p>
                       <i className="bx bxs-quote-alt-left quote-icon-left"></i>
-                      Quis quorum aliqua sint quem legam fore sunt eram irure
-                      aliqua veniam tempor noster veniam enim culpa labore duis
-                      sunt culpa nulla illum cillum fugiat legam esse veniam
-                      culpa fore nisi cillum quid.
+                      Đồ ăn ngon, không gian đẹp, phục vụ tốt!
                       <i className="bx bxs-quote-alt-right quote-icon-right"></i>
                     </p>
                   </div>
@@ -847,8 +644,8 @@ const CustomerHome = () => {
         <div className="container">
           <h3>Grill63</h3>
           <p>
-            Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni
-            eligendi fuga maxime saepe commodi placeat.
+            Nhà hàng Grill63 của Khách sạn LOTTE Hà Nội phục vụ bò bít tết hảo
+            hạng và danh mục rượu vang thượng hạng ngay tại trung tâm thành phố.
           </p>
           <div className="social-links">
             <a href="#" className="twitter">

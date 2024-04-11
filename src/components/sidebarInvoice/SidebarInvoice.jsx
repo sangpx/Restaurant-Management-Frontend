@@ -32,6 +32,12 @@ const SidebarInvoice = () => {
               <span>Hóa đơn</span>
             </li>
           </Link>
+          <Link to="/bookings" style={{ textDecoration: "none" }}>
+            <li>
+              <ReceiptIcon className="icon" />
+              <span>Đặt bàn</span>
+            </li>
+          </Link>
           <p className="title">Đăng xuất</p>
           <li>
             <Button onClick={handleLogout}>

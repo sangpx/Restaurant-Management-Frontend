@@ -11,9 +11,9 @@ const SidebarBooking = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout)
-    navigate('/signin');
-  }
+    dispatch(logout);
+    navigate("/signin");
+  };
 
   return (
     <div className="sidebar">
@@ -30,6 +30,12 @@ const SidebarBooking = () => {
             <li>
               <EventNoteIcon className="icon" />
               <span>Đặt bàn</span>
+            </li>
+          </Link>
+          <Link to="/invoices" style={{ textDecoration: "none" }}>
+            <li>
+              <EventNoteIcon className="icon" />
+              <span>Hóa đơn</span>
             </li>
           </Link>
           <p className="title">Đăng xuất</p>

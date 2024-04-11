@@ -2,7 +2,7 @@ import "./new.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../components/navbar/Navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   FormControl,
   InputLabel,
@@ -16,7 +16,6 @@ import {
   getAlls,
 } from "../../../store/category/categorySlice";
 import { createFood } from "../../../store/food/foodSlice";
-import { useCallback } from "react";
 
 const NewFood = ({ title }) => {
   const navigate = useNavigate();

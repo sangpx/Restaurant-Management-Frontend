@@ -10,209 +10,199 @@ import {
   selectAllInvoices,
 } from "../../../store/invoice/invoiceSlice";
 import { Link } from "react-router-dom";
-import PrintIcon from "@mui/icons-material/Print";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import "./list.scss";
 import {
   getAllBookings,
   selectAllBookings,
 } from "../../../store/booking/bookingSlice";
-import PaymentIcon from "@mui/icons-material/Payment";
 import Tooltip from "@mui/material/Tooltip";
-
-const getStatusNameInvoice = (status) => {
-  const statusMapInvoice = {
-    PENDING: "Đang chờ",
-    ORDERED_FOOD: "Đã đặt món",
-    PAID: "Đã thanh toán",
-  };
-  return statusMapInvoice[status] || status;
-};
-
-const columnsInvoices = [
-  {
-    field: "id",
-    headerName: "Mã Hóa đơn",
-    sortable: false,
-    width: 160,
-  },
-
-  {
-    field: "date",
-    headerName: "Ngày lập",
-    width: 150,
-    editable: true,
-    valueGetter: (params) => new Date(params.value).toLocaleDateString(),
-  },
-  {
-    field: "totalPrice",
-    headerName: "Tổng tiền",
-    width: 170,
-    editable: true,
-  },
-  {
-    field: "checkInTime",
-    headerName: "Thời gian vào",
-    width: 150,
-    editable: true,
-    valueGetter: (params) =>
-      new Date(params.value).toLocaleTimeString("en-US", {
-        hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-  },
-  {
-    field: "checkOutTime",
-    headerName: "Thời gian ra",
-    width: 150,
-    editable: true,
-    valueGetter: (params) => {
-      const checkOutTime = params.value;
-      return checkOutTime
-        ? new Date(checkOutTime).toLocaleTimeString("en-US", {
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : "Chưa thanh toán";
-    },
-  },
-  {
-    field: "deskId",
-    headerName: "Mã bàn",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-
-  {
-    field: "bookingId",
-    headerName: "Mã đặt bàn",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-
-  {
-    field: "status",
-    headerName: "Trạng thái",
-    width: 130,
-    valueGetter: (params) => getStatusNameInvoice(params.value),
-  },
-];
-
-const actionColumn = [
-  {
-    field: "action",
-    headerName: "Tác vụ",
-    width: 150,
-    renderCell: (params) => {
-      //Check điều kiện nếu trong trạng thái "PAID"
-      if (params.row.status === "PAID") {
-        return (
-          <div className="cellAction">
-            <div className="deleteButton">
-              <Tooltip title="In Hóa Đơn">
-                <PrintIcon />
-              </Tooltip>
-            </div>
-          </div>
-        );
-      } else {
-        return (
-          <div className="cellAction">
-            <Link
-              to={`/invoices/addFoodToInvoice/${params.row.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton">
-                <Tooltip title="Thêm món ăn">
-                  <PlaylistAddIcon />
-                </Tooltip>
-              </div>
-            </Link>
-            <div className="deleteButton">
-              <Tooltip title="In Hóa Đơn">
-                <PrintIcon />
-              </Tooltip>
-            </div>
-            <div className="paymentButton">
-              <Tooltip title="Thanh Toán">
-                <PaymentIcon />
-              </Tooltip>
-            </div>
-          </div>
-        );
-      }
-    },
-  },
-];
-
-const columnsBookings = [
-  {
-    field: "id",
-    headerName: "Mã Đặt bàn",
-    sortable: false,
-    width: 160,
-  },
-
-  {
-    field: "customerName",
-    headerName: "Tên khách hàng",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "address",
-    headerName: "Địa chỉ",
-    width: 170,
-    editable: true,
-  },
-  {
-    field: "phone",
-    headerName: "Số điện thoại",
-    width: 150,
-    editable: true,
-  },
-  {
-    field: "quantityPerson",
-    headerName: "Số lượng người",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-  {
-    field: "deskId",
-    headerName: "Mã bàn",
-    type: "number",
-    width: 110,
-    editable: true,
-  },
-
-  {
-    field: "status",
-    headerName: "Trạng thái",
-    width: 130,
-    valueGetter: (params) => getStatusNameBooking(params.value),
-  },
-];
-
-const getStatusNameBooking = (status) => {
-  const statusMapBooking = {
-    INACTIVE: "Đã hoàn thành",
-    CONFIRMED: "Đã xác nhận",
-  };
-  return statusMapBooking[status] || status;
-};
+import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 
 const ListInvoice = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("accessToken");
   const invoices = useSelector(selectAllInvoices);
   const bookings = useSelector(selectAllBookings);
-
   const [refresh, setRefresh] = useState(false);
+
+  const getStatusNameInvoice = (status) => {
+    const statusMapInvoice = {
+      PENDING: "Đang chờ",
+      ORDERED_FOOD: "Đã đặt món",
+      PAID: "Đã thanh toán",
+    };
+    return statusMapInvoice[status] || status;
+  };
+
+  const columnsInvoices = [
+    {
+      field: "id",
+      headerName: "Mã Hóa đơn",
+      sortable: false,
+      width: 160,
+    },
+
+    {
+      field: "date",
+      headerName: "Ngày lập",
+      width: 150,
+      editable: true,
+      valueGetter: (params) => new Date(params.value).toLocaleDateString(),
+    },
+    {
+      field: "totalPrice",
+      headerName: "Tổng tiền",
+      width: 170,
+      editable: true,
+    },
+    {
+      field: "checkInTime",
+      headerName: "Thời gian vào",
+      width: 150,
+      editable: true,
+      valueGetter: (params) =>
+        new Date(params.value).toLocaleTimeString("en-US", {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    },
+    {
+      field: "checkOutTime",
+      headerName: "Thời gian ra",
+      width: 200,
+      valueGetter: (params) => {
+        const checkOutTime = params.value;
+        return checkOutTime
+          ? `${new Date(checkOutTime).toLocaleDateString()} ${new Date(
+              checkOutTime
+            ).toLocaleTimeString("en-US", {
+              hour12: false,
+              hour: "2-digit",
+              minute: "2-digit",
+            })}`
+          : "Chưa thanh toán";
+      },
+    },
+    {
+      field: "deskId",
+      headerName: "Mã bàn",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+
+    {
+      field: "bookingId",
+      headerName: "Mã đặt bàn",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      width: 130,
+      valueGetter: (params) => getStatusNameInvoice(params.value),
+    },
+  ];
+
+  const actionColumn = [
+    {
+      field: "action",
+      headerName: "Tác vụ",
+      width: 200,
+      renderCell: (params) => {
+        //Check điều kiện nếu trong trạng thái "PAID"
+        if (params.row.status === "PAID") {
+          return (
+            <div className="cellAction">
+              <div className="deleteButton">
+                <Tooltip title="Không được phép">
+                  <DoNotDisturbIcon />
+                </Tooltip>
+              </div>
+            </div>
+          );
+        } else {
+          return (
+            <div className="cellAction">
+              <Link
+                to={`/invoices/addFoodToInvoice/${params.row.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <div className="viewButton">
+                  <Tooltip title="Thêm món ăn">
+                    <PlaylistAddIcon />
+                  </Tooltip>
+                </div>
+              </Link>
+            </div>
+          );
+        }
+      },
+    },
+  ];
+
+  const columnsBookings = [
+    {
+      field: "id",
+      headerName: "Mã Đặt bàn",
+      sortable: false,
+      width: 160,
+    },
+
+    {
+      field: "customerName",
+      headerName: "Tên khách hàng",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "address",
+      headerName: "Địa chỉ",
+      width: 170,
+      editable: true,
+    },
+    {
+      field: "phone",
+      headerName: "Số điện thoại",
+      width: 150,
+      editable: true,
+    },
+    {
+      field: "quantityPerson",
+      headerName: "Số lượng người",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+    {
+      field: "deskId",
+      headerName: "Mã bàn",
+      type: "number",
+      width: 110,
+      editable: true,
+    },
+
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      width: 130,
+      valueGetter: (params) => getStatusNameBooking(params.value),
+    },
+  ];
+
+  const getStatusNameBooking = (status) => {
+    const statusMapBooking = {
+      INACTIVE: "Đã hoàn thành",
+      CONFIRMED: "Đã xác nhận",
+      WORKING: "Đang có hóa đơn",
+    };
+    return statusMapBooking[status] || status;
+  };
 
   const handleRefresh = () => {
     dispatch(getAllInvoices());

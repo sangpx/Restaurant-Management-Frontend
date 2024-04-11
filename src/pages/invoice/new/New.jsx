@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import SidebarInvoice from "../../../components/sidebarInvoice/SidebarInvoice";
+import { FormControl, InputLabel, MenuItem } from "@mui/material";
 import {
   getAllBookings,
   selectAllBookings,
@@ -77,7 +75,6 @@ const NewInvoice = ({ title }) => {
                               invoice.status === "ORDERED_FOOD" ||
                               invoice.status === "PAID")
                         );
-
                         // Nếu không có invoice nào có trạng thái "PENDING" hoặc "ORDERED_FOOD" thì hiển thị mã đặt bàn
                         if (!hasPendingInvoice) {
                           return (
