@@ -14,7 +14,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAlls, selectAllDesks } from "../../store/desk/deskSlice";
@@ -30,7 +30,11 @@ import SidebarBooking from "../../components/sidebarBooking/SidebarBooking";
 import Tooltip from "@mui/material/Tooltip";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
-import { createInvoice } from "../../store/invoice/invoiceSlice";
+import {
+  createInvoice,
+  getAllInvoices,
+  selectAllInvoices,
+} from "../../store/invoice/invoiceSlice";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
@@ -41,6 +45,7 @@ const ListBooking = () => {
   const jwt = localStorage.getItem("accessToken");
   const desks = useSelector(selectAllDesks);
   const bookings = useSelector(selectAllBookings);
+  const invoices = useSelector(selectAllInvoices);
   const [selectedDesk, setSelectedDesk] = useState("");
   const [selectedDeskHolding, setSelectedDeskHolding] = useState("");
   const [open, setOpen] = useState(false);
@@ -55,8 +60,19 @@ const ListBooking = () => {
   const [refresh, setRefresh] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState("");
 
-  const handleAddFoodToInvoiceDetail = () => {
-    console.log("Hello");
+  const findInvoiceIdByBookingId = (bookingId) => {
+    const booking = bookings.find((booking) => booking.id === bookingId);
+    if (booking) {
+      const invoice = invoices.find(
+        (invoice) => invoice.bookingId === bookingId
+      );
+      return invoice ? invoice.id : null;
+    }
+    return null;
+  };
+
+  const handleAddFoodToInvoiceDetail = (invoiceId) => {
+    navigate(`/invoices/addFoodToInvoice/${invoiceId}`);
   };
 
   const handleAddDeskClickOpen = (id) => {
@@ -167,7 +183,11 @@ const ListBooking = () => {
               <div className="cellAction">
                 <div
                   className="viewButton"
-                  onClick={handleAddFoodToInvoiceDetail}
+                  onClick={() =>
+                    handleAddFoodToInvoiceDetail(
+                      findInvoiceIdByBookingId(params.row.id)
+                    )
+                  }
                 >
                   <Tooltip title="Thêm món ăn">
                     <PlaylistAddIcon />
@@ -275,6 +295,12 @@ const ListBooking = () => {
   useEffect(() => {
     if (jwt) {
       dispatch(getAlls());
+    }
+  }, [jwt, dispatch, refresh]);
+
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getAllInvoices());
     }
   }, [jwt, dispatch, refresh]);
 

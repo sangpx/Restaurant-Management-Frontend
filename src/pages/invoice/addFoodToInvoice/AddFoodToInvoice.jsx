@@ -206,7 +206,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
     event.preventDefault(event);
     setSelectedFood("");
     setQuantity(1);
-    navigate("/invoices");
+    navigate("/bookings");
   };
 
   const calculateTotalAmount = () => {

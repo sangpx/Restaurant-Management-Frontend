@@ -127,11 +127,11 @@ export default function SignInSide() {
                     Quên Mật khẩu?
                   </Link>
                 </Grid>
-                {/* <Grid item>
+                <Grid item>
                   <Link href="#" variant="body2">
                     {"Bạn chưa có tài khoản? Đăng Ký"}
                   </Link>
-                </Grid> */}
+                </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />
             </Box>
