@@ -1,7 +1,6 @@
 import "./new.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../../components/navbar/Navbar";
 import { useEffect, useState, useCallback } from "react";
 import {
   FormControl,
@@ -57,7 +56,6 @@ const NewFood = ({ title }) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar />
         <div className="top">
           <h1>{title}</h1>
         </div>

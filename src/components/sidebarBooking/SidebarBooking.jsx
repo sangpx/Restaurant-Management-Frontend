@@ -1,5 +1,6 @@
 import "./SidebarBooking.scss";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -25,7 +26,7 @@ const SidebarBooking = () => {
       <hr />
       <div className="center">
         <ul>
-          <p className="title">Quản lý Đặt bàn</p>
+          <p className="title">Nhân viên quản lý</p>
           <Link to="/bookings" style={{ textDecoration: "none" }}>
             <li>
               <EventNoteIcon className="icon" />
@@ -34,7 +35,7 @@ const SidebarBooking = () => {
           </Link>
           <Link to="/invoices" style={{ textDecoration: "none" }}>
             <li>
-              <EventNoteIcon className="icon" />
+              <ReceiptIcon className="icon" />
               <span>Hóa đơn</span>
             </li>
           </Link>

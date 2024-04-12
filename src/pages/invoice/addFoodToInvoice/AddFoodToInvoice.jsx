@@ -16,7 +16,6 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import SidebarInvoice from "../../../components/sidebarInvoice/SidebarInvoice";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 import Select from "@mui/material/Select";
 import {
@@ -36,6 +35,7 @@ import { Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PrintIcon from "@mui/icons-material/Print";
+import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
 
 const AddFoodToInvoiceDetail = ({ title }) => {
   const columnsInvoiceDetail = [
@@ -232,7 +232,7 @@ const AddFoodToInvoiceDetail = ({ title }) => {
 
   return (
     <div className="new">
-      <SidebarInvoice />
+      <SidebarBooking />
       <div className="newContainer">
         <div className="top">
           <h1>{title}</h1>

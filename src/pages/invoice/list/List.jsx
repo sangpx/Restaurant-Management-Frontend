@@ -4,7 +4,7 @@ import { Button, CircularProgress, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import SidebarInvoice from "../../../components/sidebarInvoice/SidebarInvoice";
+import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
 import {
   getAllInvoices,
   selectAllInvoices,
@@ -222,7 +222,7 @@ const ListInvoice = () => {
 
   return (
     <div className="list">
-      <SidebarInvoice />
+      <SidebarBooking />
       <div className="listContainer">
         <div className="datatable">
           <div className="datatableTitle">

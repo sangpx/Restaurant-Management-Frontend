@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Select from "@mui/material/Select";
-import SidebarInvoice from "../../../components/sidebarInvoice/SidebarInvoice";
 import { FormControl, InputLabel, MenuItem } from "@mui/material";
 import {
   getAllBookings,
@@ -13,6 +12,7 @@ import {
   createInvoice,
   selectAllInvoices,
 } from "../../../store/invoice/invoiceSlice";
+import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
 
 const NewInvoice = ({ title }) => {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const NewInvoice = ({ title }) => {
 
   return (
     <div className="new">
-      <SidebarInvoice />
+      <SidebarBooking />
       <div className="newContainer">
         <div className="top">
           <h1>{title}</h1>

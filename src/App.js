@@ -1,8 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./style/dark.scss";
-import { useContext } from "react";
 import Home from "./pages/home/Home";
-import { DarkModeContext } from "./context/darkModeContext";
 import SignInSide from "./pages/auth/signIn";
 import ListUser from "./pages/user/list/List";
 import NewUser from "./pages/user/new/New";
@@ -23,10 +20,8 @@ import AddFoodToInvoiceDetail from "./pages/invoice/addFoodToInvoice/AddFoodToIn
 import CustomerHome from "./pages/customer/Customer.jsx";
 
 function App() {
-  const { darkMode } = useContext(DarkModeContext);
-
   return (
-    <div className={darkMode ? "app dark" : "app"}>
+    <div className="app">
       <BrowserRouter>
         <Routes>
           <Route path="signin" element={<SignInSide />} />

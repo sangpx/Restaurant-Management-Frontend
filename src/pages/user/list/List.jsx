@@ -1,6 +1,6 @@
 import "./list.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, CircularProgress, TextField } from "@mui/material";
 import { useEffect, useState } from "react";

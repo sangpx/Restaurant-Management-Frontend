@@ -1,7 +1,6 @@
 import "./new.scss";
 import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../../components/navbar/Navbar";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -33,7 +32,6 @@ const NewCategory = ({ title }) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar />
         <div className="top">
           <h1>{title}</h1>
         </div>
@@ -48,7 +46,7 @@ const NewCategory = ({ title }) => {
                   id="name"
                   placeholder="Nhập Tên Loại"
                   variant="standard"
-                  value={name} 
+                  value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
