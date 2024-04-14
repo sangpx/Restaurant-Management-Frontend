@@ -107,13 +107,6 @@ const ListBooking = () => {
 
   const columnsBookings = [
     {
-      field: "id",
-      headerName: "Mã Đặt bàn",
-      sortable: false,
-      width: 160,
-    },
-
-    {
       field: "customerName",
       headerName: "Tên khách hàng",
       width: 150,
@@ -344,6 +337,8 @@ const ListBooking = () => {
     ]);
     setSelectedDesk("");
   };
+
+  
 
   return (
     <div className="list">

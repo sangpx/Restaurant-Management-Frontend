@@ -15,7 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, forwardRef } from "react";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 import Select from "@mui/material/Select";
 import {
@@ -36,8 +36,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PrintIcon from "@mui/icons-material/Print";
 import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
+import ReactToPrint from "react-to-print";
 
-const AddFoodToInvoiceDetail = ({ title }) => {
+const AddFoodToInvoiceDetail = () => {
+  let componentRef = useRef();
+
   const columnsInvoiceDetail = [
     {
       field: "invoiceId",
@@ -230,13 +233,42 @@ const AddFoodToInvoiceDetail = ({ title }) => {
     dispatch(getAllInvoices());
   };
 
+  const ComponentToPrint = forwardRef((props, ref) => {
+    return (
+      <div ref={ref}>
+        <h2 style={{ color: "green" }}>Attendance</h2>
+        <table>
+          <thead>
+            <th>S/N</th>
+            <th>Name</th>
+            <th>Email</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Njoku Samson</td>
+              <td>samson@yahoo.com</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Ebere Plenty</td>
+              <td>ebere@gmail.com</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Undefined</td>
+              <td>No Email</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  });
+
   return (
     <div className="new">
       <SidebarBooking />
       <div className="newContainer">
-        <div className="top">
-          <h1>{title}</h1>
-        </div>
         <div className="bottom">
           <div className="right">
             <form onSubmit={handleOrderFood} method="post" className="form">
@@ -343,21 +375,26 @@ const AddFoodToInvoiceDetail = ({ title }) => {
                   className="right-top_left"
                   onClick={() => handlePayment(id)}
                 >
-                  <div className="formButton">
-                    <Button>
-                      <Tooltip title="Thanh toán">
+                  <Tooltip title="Thanh toán">
+                    <div className="formButton">
+                      <Button>
                         <PaymentIcon />
-                      </Tooltip>
-                    </Button>
-                  </div>
+                      </Button>
+                    </div>
+                  </Tooltip>
                 </div>
+
                 <div className="right-top_left">
-                  <div className="formButton">
-                    <Button>
-                      <Tooltip title="In Hóa đơn">
+                  <ReactToPrint
+                    trigger={() => (
+                      <Button>
                         <PrintIcon />
-                      </Tooltip>
-                    </Button>
+                      </Button>
+                    )}
+                    content={() => componentRef}
+                  />
+                  <div style={{ display: "none" }}>
+                    <ComponentToPrint ref={(el) => (componentRef = el)} />
                   </div>
                 </div>
               </div>
@@ -390,7 +427,6 @@ const AddFoodToInvoiceDetail = ({ title }) => {
           <Button onClick={handleCloseEditModal}>Đóng</Button>
         </div>
       </Modal>
-
       <Dialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
