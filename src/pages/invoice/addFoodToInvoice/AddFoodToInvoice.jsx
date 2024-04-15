@@ -25,6 +25,7 @@ import {
   getAllInvoices,
   payInvoice,
   selectAllDetailInvoices,
+  selectAllInvoices,
   updateToInvoice,
 } from "../../../store/invoice/invoiceSlice";
 import CloseIcon from "@mui/icons-material/Close";
@@ -37,6 +38,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import PrintIcon from "@mui/icons-material/Print";
 import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
 import ReactToPrint from "react-to-print";
+import moment from "moment";
 
 const AddFoodToInvoiceDetail = () => {
   let componentRef = useRef();
@@ -85,6 +87,11 @@ const AddFoodToInvoiceDetail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const invoiceDetails = useSelector(selectAllDetailInvoices);
+  const invoices = useSelector(selectAllInvoices);
+  const [checkInTime, setCheckInTime] = useState("");
+  const [checkOutTime, setCheckOutTime] = useState("");
+  const [deskId, setDeskId] = useState("");
+  const [status, setStatus] = useState("");
   const foods = useSelector(selectAllFoods);
   const [selectedFood, setSelectedFood] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -187,6 +194,27 @@ const AddFoodToInvoiceDetail = () => {
     dispatch(getAlls());
   }, [dispatch, refresh]);
 
+  useEffect(() => {
+    dispatch(getAllInvoices());
+  }, [dispatch, refresh]);
+
+  useEffect(() => {
+    const idNumber = parseInt(id);
+    const invoiceExisted = invoices.find((invoice) => invoice.id === idNumber);
+    if (invoiceExisted) {
+      const checkInTimeFormatted = moment(invoiceExisted.checkInTime).format(
+        "DD/MM/YYYY [:] HH:mm"
+      );
+      const checkOutTimeFormatted = moment(invoiceExisted.checkOutTime).format(
+        "DD/MM/YYYY [:] HH:mm"
+      );
+      setCheckInTime(checkInTimeFormatted);
+      setCheckOutTime(checkOutTimeFormatted);
+      setDeskId(invoiceExisted.deskId);
+      setStatus(invoiceExisted.status);
+    }
+  }, [id, invoices]);
+
   //Xử lý ô input quantity
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
@@ -229,38 +257,73 @@ const AddFoodToInvoiceDetail = () => {
   const handlePayment = (invoiceId) => {
     dispatch(payInvoice(invoiceId));
     alert("Thanh toán thành công!");
-    navigate("/invoices");
     dispatch(getAllInvoices());
   };
 
-  const ComponentToPrint = forwardRef((props, ref) => {
+  const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
     return (
       <div ref={ref}>
-        <h2 style={{ color: "green" }}>Attendance</h2>
-        <table>
-          <thead>
-            <th>S/N</th>
-            <th>Name</th>
-            <th>Email</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Njoku Samson</td>
-              <td>samson@yahoo.com</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Ebere Plenty</td>
-              <td>ebere@gmail.com</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Undefined</td>
-              <td>No Email</td>
-            </tr>
-          </tbody>
-        </table>
+        <div style={{ padding: "20px", border: "1px solid #ccc" }}>
+          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+            HÓA ĐƠN THANH TOÁN
+          </h2>
+          <div style={{ marginBottom: "20px" }}>
+            <div>
+              <strong>Số HD:</strong> {id}
+            </div>
+            <div>
+              <strong>Giờ vào:</strong> {checkInTime}
+            </div>
+            <div>
+              <strong>Giờ ra:</strong> {checkOutTime}
+            </div>
+            <div>
+              <strong>Bàn ăn:</strong> {deskId}
+            </div>
+            <div>
+              <strong>Trạng thái:</strong>{" "}
+              {status === "PAID" ? "Đã thanh toán" : status}
+            </div>
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "1px solid #ccc" }}>
+                <th style={{ textAlign: "left", padding: "8px" }}>
+                  Tên món ăn
+                </th>
+                <th style={{ textAlign: "left", padding: "8px" }}>Số lượng</th>
+                <th style={{ textAlign: "left", padding: "8px" }}>
+                  Thành tiền
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoiceDetails.map((item, index) => (
+                <tr key={index} style={{ borderBottom: "1px solid #ccc" }}>
+                  <td style={{ padding: "8px" }}>{item.nameFood}</td>
+                  <td style={{ padding: "8px" }}>{item.quantity}</td>
+                  <td style={{ padding: "8px" }}>
+                    {formatIntoMoney(item.intoMoney)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{ marginTop: "20px", textAlign: "right" }}>
+            <strong>Tổng tiền:</strong>{" "}
+            {formatIntoMoney(calculateTotalAmount())}
+          </div>
+        </div>
+        <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+          Nhà hàng Grill63 - 54 Liễu Giai - Ba Đình - Hà Nội
+        </h4>
+        <h5 style={{ textAlign: "center", marginTop: "20px" }}>
+          +84 24 3333 1701
+        </h5>
+
+        <h4 style={{ textAlign: "center", marginTop: "20px" }}>
+          Trân trọng cảm ơn quý khách! Hẹn gặp lại
+        </h4>
       </div>
     );
   });
@@ -387,14 +450,19 @@ const AddFoodToInvoiceDetail = () => {
                 <div className="right-top_left">
                   <ReactToPrint
                     trigger={() => (
-                      <Button>
-                        <PrintIcon />
-                      </Button>
+                      <Tooltip title="In Hóa đơn">
+                        <Button>
+                          <PrintIcon />
+                        </Button>
+                      </Tooltip>
                     )}
                     content={() => componentRef}
                   />
                   <div style={{ display: "none" }}>
-                    <ComponentToPrint ref={(el) => (componentRef = el)} />
+                    <ComponentToPrint
+                      invoiceDetails={invoiceDetails}
+                      ref={(el) => (componentRef = el)}
+                    />
                   </div>
                 </div>
               </div>

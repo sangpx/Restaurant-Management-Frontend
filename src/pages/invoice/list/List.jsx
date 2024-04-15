@@ -12,10 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import "./list.scss";
-import {
-  getAllBookings,
-  selectAllBookings,
-} from "../../../store/booking/bookingSlice";
+import { getAllBookings } from "../../../store/booking/bookingSlice";
 import Tooltip from "@mui/material/Tooltip";
 import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 
@@ -23,7 +20,6 @@ const ListInvoice = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("accessToken");
   const invoices = useSelector(selectAllInvoices);
-  const bookings = useSelector(selectAllBookings);
   const [refresh, setRefresh] = useState(false);
 
   const getStatusNameInvoice = (status) => {
@@ -41,6 +37,13 @@ const ListInvoice = () => {
       headerName: "Mã Hóa đơn",
       sortable: false,
       width: 160,
+    },
+
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      width: 130,
+      valueGetter: (params) => getStatusNameInvoice(params.value),
     },
 
     {
@@ -100,13 +103,6 @@ const ListInvoice = () => {
       width: 110,
       editable: true,
     },
-
-    {
-      field: "status",
-      headerName: "Trạng thái",
-      width: 130,
-      valueGetter: (params) => getStatusNameInvoice(params.value),
-    },
   ];
 
   const actionColumn = [
@@ -145,64 +141,6 @@ const ListInvoice = () => {
       },
     },
   ];
-
-  const columnsBookings = [
-    {
-      field: "id",
-      headerName: "Mã Đặt bàn",
-      sortable: false,
-      width: 160,
-    },
-
-    {
-      field: "customerName",
-      headerName: "Tên khách hàng",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "address",
-      headerName: "Địa chỉ",
-      width: 170,
-      editable: true,
-    },
-    {
-      field: "phone",
-      headerName: "Số điện thoại",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "quantityPerson",
-      headerName: "Số lượng người",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "deskId",
-      headerName: "Mã bàn",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-
-    {
-      field: "status",
-      headerName: "Trạng thái",
-      width: 130,
-      valueGetter: (params) => getStatusNameBooking(params.value),
-    },
-  ];
-
-  const getStatusNameBooking = (status) => {
-    const statusMapBooking = {
-      INACTIVE: "Đã hoàn thành",
-      CONFIRMED: "Đã xác nhận",
-      WORKING: "Đang có hóa đơn",
-    };
-    return statusMapBooking[status] || status;
-  };
 
   const handleRefresh = () => {
     dispatch(getAllInvoices());
@@ -248,7 +186,7 @@ const ListInvoice = () => {
           <div className="new">
             <div className="newContainer">
               <div className="bottom" style={{ flexDirection: "row" }}>
-                <div className="left">
+                {/* <div className="left">
                   {bookings && bookings.length > 0 ? (
                     <Box sx={{ height: 550, width: "100%" }}>
                       <DataGrid
@@ -266,7 +204,7 @@ const ListInvoice = () => {
                   ) : (
                     <CircularProgress />
                   )}
-                </div>
+                </div> */}
                 <div className="right">
                   <div style={{ flex: 1, paddingLeft: 10 }}>
                     <div style={{ height: 550, width: "100%" }}>

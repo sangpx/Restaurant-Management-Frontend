@@ -14,7 +14,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAlls, selectAllDesks } from "../../store/desk/deskSlice";
@@ -125,12 +125,12 @@ const ListBooking = () => {
       width: 110,
       editable: true,
     },
-    {
-      field: "address",
-      headerName: "Địa chỉ",
-      width: 170,
-      editable: true,
-    },
+    // {
+    //   field: "address",
+    //   headerName: "Địa chỉ",
+    //   width: 170,
+    //   editable: true,
+    // },
     {
       field: "email",
       headerName: "Email",
@@ -338,8 +338,6 @@ const ListBooking = () => {
     setSelectedDesk("");
   };
 
-  
-
   return (
     <div className="list">
       <SidebarBooking />
@@ -357,7 +355,7 @@ const ListBooking = () => {
                 </div>
               </div>
             </div>
-            <div className="bottom" style={{ flexDirection: "row" }}>
+            <div className="bottom" style={{ flexDirection: "column" }}>
               <div className="left" style={{ flex: "3 1" }}>
                 {bookings && bookings.length > 0 ? (
                   <Box sx={{ height: 597, width: "100%" }}>
