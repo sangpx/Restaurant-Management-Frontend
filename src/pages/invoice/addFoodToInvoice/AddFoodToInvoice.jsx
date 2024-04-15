@@ -448,16 +448,26 @@ const AddFoodToInvoiceDetail = () => {
                 </div>
 
                 <div className="right-top_left">
-                  <ReactToPrint
-                    trigger={() => (
-                      <Tooltip title="In Hóa đơn">
-                        <Button>
+                  {status === "PAID" ? (
+                    <ReactToPrint
+                      trigger={() => (
+                        <Tooltip title="In Hóa đơn">
+                          <Button>
+                            <PrintIcon />
+                          </Button>
+                        </Tooltip>
+                      )}
+                      content={() => componentRef}
+                    />
+                  ) : (
+                    <Tooltip disabled title="In Hóa đơn">
+                      <span>
+                        <Button disabled>
                           <PrintIcon />
                         </Button>
-                      </Tooltip>
-                    )}
-                    content={() => componentRef}
-                  />
+                      </span>
+                    </Tooltip>
+                  )}
                   <div style={{ display: "none" }}>
                     <ComponentToPrint
                       invoiceDetails={invoiceDetails}
