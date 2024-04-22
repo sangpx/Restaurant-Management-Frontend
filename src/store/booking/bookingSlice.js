@@ -41,7 +41,7 @@ export const createBooking = createAsyncThunk(
           },
         }
       );
-      console.log("response.data: ", response.data);
+      console.log("Data Đặt bàn: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);

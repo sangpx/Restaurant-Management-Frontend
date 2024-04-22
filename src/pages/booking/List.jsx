@@ -33,7 +33,8 @@ import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 import {
   createInvoice,
   getAllInvoices,
-  selectAllInvoices,
+  getInvoiceByBookingId,
+  selectInvoiceByBookingId,
 } from "../../store/invoice/invoiceSlice";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import EditIcon from "@mui/icons-material/Edit";
@@ -45,10 +46,10 @@ const ListBooking = () => {
   const jwt = localStorage.getItem("accessToken");
   const desks = useSelector(selectAllDesks);
   const bookings = useSelector(selectAllBookings);
-  const invoices = useSelector(selectAllInvoices);
   const [selectedDesk, setSelectedDesk] = useState("");
   const [selectedDeskHolding, setSelectedDeskHolding] = useState("");
   const [open, setOpen] = useState(false);
+  const [openAddFood, setOpenAddFood] = useState(false);
   const [openAddDesk, setOpenAddDesk] = useState(false);
   const [newBooking, setNewBooking] = useState({
     customerName: "",
@@ -59,21 +60,12 @@ const ListBooking = () => {
   });
   const [refresh, setRefresh] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState("");
-
-  const findInvoiceIdByBookingId = (bookingId) => {
-    const booking = bookings.find((booking) => booking.id === bookingId);
-    if (booking) {
-      const invoice = invoices.find(
-        (invoice) => invoice.bookingId === bookingId
-      );
-      return invoice ? invoice.id : null;
-    }
-    return null;
-  };
-
-  const handleAddFoodToInvoiceDetail = (invoiceId) => {
-    navigate(`/invoices/addFoodToInvoice/${invoiceId}`);
-  };
+  const [defaultSortModel, setDefaultSortModel] = useState([
+    {
+      field: "id",
+      sort: "desc", // DESC là giá trị mặc định để sắp xếp giảm dần
+    },
+  ]);
 
   const handleAddDeskClickOpen = (id) => {
     setSelectedBookingId(id);
@@ -87,11 +79,14 @@ const ListBooking = () => {
         deskId: selectedDeskHolding,
       })
     );
+    alert("Giữ chỗ thành công!");
+    dispatch(getAllBookings());
     handleClose();
   };
 
   const handleConfirmDeskCustomer = (selectedBookingId) => {
     dispatch(confirmDeskCustomer(selectedBookingId));
+    alert("Nhận bàn thành công!");
   };
 
   const getStatusNameBooking = (status) => {
@@ -106,6 +101,12 @@ const ListBooking = () => {
   };
 
   const columnsBookings = [
+    {
+      field: "id",
+      headerName: "Mã đặt bàn",
+      width: 150,
+      editable: true,
+    },
     {
       field: "customerName",
       headerName: "Tên khách hàng",
@@ -125,12 +126,6 @@ const ListBooking = () => {
       width: 110,
       editable: true,
     },
-    // {
-    //   field: "address",
-    //   headerName: "Địa chỉ",
-    //   width: 170,
-    //   editable: true,
-    // },
     {
       field: "email",
       headerName: "Email",
@@ -176,11 +171,9 @@ const ListBooking = () => {
               <div className="cellAction">
                 <div
                   className="viewButton"
-                  onClick={() =>
-                    handleAddFoodToInvoiceDetail(
-                      findInvoiceIdByBookingId(params.row.id)
-                    )
-                  }
+                  onClick={() => {
+                    handleClickAddFoodOpen(params.row.id);
+                  }}
                 >
                   <Tooltip title="Thêm món ăn">
                     <PlaylistAddIcon />
@@ -208,7 +201,9 @@ const ListBooking = () => {
               <div className="cellAction">
                 <div
                   className="viewButton"
-                  onClick={() => handleClickOpen(params.row.id)}
+                  onClick={() => {
+                    handleClickOpen(params.row.id);
+                  }}
                 >
                   <Tooltip title="Thêm hóa đơn">
                     <AddCircleIcon />
@@ -250,23 +245,37 @@ const ListBooking = () => {
     setOpen(true);
   };
 
+  const handleClickAddFoodOpen = (id) => {
+    setSelectedBookingId(id);
+    setOpenAddFood(true);
+    dispatch(getInvoiceByBookingId(id));
+  };
+
+  const invoice = useSelector((state) =>
+    selectInvoiceByBookingId(state, selectedBookingId)
+  );
+
+  const handleAddFoodInvoice = (id) => {
+    navigate(`/invoices/addFoodToInvoice/${invoice.id}`);
+    console.log("ok", invoice.id);
+  };
+
   const handleClose = () => {
     setOpen(false);
     setOpenAddDesk(false);
+    setOpenAddFood(false);
   };
-
-  useEffect(() => {
-    dispatch(getAllBookings());
-  }, [dispatch]);
 
   const handleAddInvoice = () => {
     dispatch(createInvoice(selectedBookingId));
+    alert("Thêm hóa đơn thành công!");
+    dispatch(getAllInvoices);
     handleClose();
   };
 
   const handleRefresh = () => {
+    dispatch(getAllInvoices());
     dispatch(getAllBookings());
-    dispatch(getAlls());
   };
 
   const handleInputChange = (e) => {
@@ -288,17 +297,7 @@ const ListBooking = () => {
   useEffect(() => {
     if (jwt) {
       dispatch(getAlls());
-    }
-  }, [jwt, dispatch, refresh]);
-
-  useEffect(() => {
-    if (jwt) {
       dispatch(getAllInvoices());
-    }
-  }, [jwt, dispatch, refresh]);
-
-  useEffect(() => {
-    if (jwt) {
       dispatch(getAllBookings());
     }
   }, [jwt, dispatch, refresh]);
@@ -310,6 +309,8 @@ const ListBooking = () => {
       deskId: selectedDesk,
     };
     dispatch(createBooking(bookingData));
+    alert("Thêm mới đặt bàn thành công!");
+    dispatch(getAllBookings());
     setNewBooking([
       {
         customerName: "",
@@ -362,6 +363,7 @@ const ListBooking = () => {
                     <DataGrid
                       rows={bookings}
                       columns={columnsBookings.concat(actionColumn)}
+                      sortModel={defaultSortModel}
                       initialState={{
                         pagination: {
                           pageSize: 8,
@@ -496,6 +498,25 @@ const ListBooking = () => {
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
           <Button onClick={handleAddInvoice}>Thêm mới</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Thêm mới món ăn cho hóa đơn */}
+      <Dialog
+        open={openAddFood}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Gọi món</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn muốn thêm món ăn cho hóa đơn này?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Hủy</Button>
+          <Button onClick={handleAddFoodInvoice}>Thêm mới</Button>
         </DialogActions>
       </Dialog>
 

@@ -21,6 +21,12 @@ const ListInvoice = () => {
   const jwt = localStorage.getItem("accessToken");
   const invoices = useSelector(selectAllInvoices);
   const [refresh, setRefresh] = useState(false);
+  const [defaultSortModel, setDefaultSortModel] = useState([
+    {
+      field: "bookingId",
+      sort: "desc", // DESC là giá trị mặc định để sắp xếp giảm dần
+    },
+  ]);
 
   const getStatusNameInvoice = (status) => {
     const statusMapInvoice = {
@@ -33,10 +39,11 @@ const ListInvoice = () => {
 
   const columnsInvoices = [
     {
-      field: "id",
-      headerName: "Mã Hóa đơn",
-      sortable: false,
-      width: 160,
+      field: "bookingId",
+      headerName: "Mã đặt bàn",
+      type: "number",
+      width: 110,
+      editable: true,
     },
 
     {
@@ -91,14 +98,6 @@ const ListInvoice = () => {
     {
       field: "deskId",
       headerName: "Mã bàn",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-
-    {
-      field: "bookingId",
-      headerName: "Mã đặt bàn",
       type: "number",
       width: 110,
       editable: true,
@@ -213,6 +212,7 @@ const ListInvoice = () => {
                           <DataGrid
                             rows={invoices}
                             columns={columnsInvoices.concat(actionColumn)}
+                            sortModel={defaultSortModel}
                             initialState={{
                               pagination: {
                                 pageSize: 8,

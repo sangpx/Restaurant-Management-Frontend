@@ -42,7 +42,6 @@ export const createInvoice = createAsyncThunk(
           },
         }
       );
-      console.log("response.data: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -89,6 +88,46 @@ export const addFoodToInvoice = createAsyncThunk(
   }
 );
 
+export const getInvoiceById = createAsyncThunk(
+  "invoices/getInvoiceById",
+  async (invoiceId) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/invoices/getInvoiceById/${invoiceId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const getInvoiceByBookingId = createAsyncThunk(
+  "invoices/getInvoiceByBookingId",
+  async (bookingId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/invoices/getInvoiceByBookingId/${bookingId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const updateToInvoice = createAsyncThunk(
   "invoices/UpdateToInvoice",
   async (newInvoiceDetail) => {
@@ -102,7 +141,6 @@ export const updateToInvoice = createAsyncThunk(
           },
         }
       );
-      console.log("response.data UpdateToInvoice: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -122,7 +160,6 @@ export const deleteInvocie = createAsyncThunk(
           },
         }
       );
-      console.log("response.data deleteInvocie: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -186,6 +223,17 @@ const invoiceSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(getInvoiceById.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getInvoiceById.fulfilled, (state, action) => {
+        state.status = "done";
+        state.invoice = action.payload; //action.payload ===== response.data
+      })
+      .addCase(getInvoiceById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(addFoodToInvoice.fulfilled, (state, action) => {
         state.status = "done";
         state.listDetailInvoices.push(action.payload); //action.payload ===== response.data
@@ -206,6 +254,17 @@ const invoiceSlice = createSlice({
             updatedInvoice.status = "PAID";
           }
         }
+      })
+      .addCase(getInvoiceByBookingId.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getInvoiceByBookingId.fulfilled, (state, action) => {
+        state.status = "done";
+        state.invoice = action.payload; //action.payload ===== response.data
+      })
+      .addCase(getInvoiceByBookingId.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
@@ -220,5 +279,9 @@ export const selectAllDetailInvoices = (state) =>
   state.invoiceReducer.listDetailInvoices;
 export const selectInvoice = (state) => state.invoiceReducer.invoice;
 export const selectError = (state) => state.invoiceReducer.error;
+export const selectInvoiceByBookingId = (state, bookingId) =>
+  state.invoiceReducer.listInvoices.find(
+    (invoice) => invoice.bookingId === bookingId
+  );
 
 export default invoiceReducer;

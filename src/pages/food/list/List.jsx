@@ -52,10 +52,8 @@ const ListFood = () => {
   ];
 
   useEffect(() => {
-    if (jwt) {
-      dispatch(getAlls(jwt));
-    }
-  }, [jwt, dispatch]);
+    dispatch(getAlls());
+  }, [dispatch]);
 
   return (
     <div className="list">

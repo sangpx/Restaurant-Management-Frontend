@@ -36,12 +36,6 @@ const columns = [
     width: 330,
     valueGetter: (params) => getRoleName(params.row.roles),
   },
-  // {
-  //   field: "status",
-  //   headerName: "Trạng thái",
-  //   width: 230,
-  //   valueGetter: (params) => getStatus(params.row.status),
-  // },
 ];
 
 const ListUser = () => {
@@ -84,6 +78,11 @@ const ListUser = () => {
     }
   }, [jwt, dispatch, refresh]);
 
+  //Lọc bỏ người dùng với chức vụ là "Người dùng"
+  const filteredUsers = users.filter(
+    (user) => getRoleName(user.roles) !== "Người dùng"
+  );
+
   return (
     <div className="list">
       <Sidebar />
@@ -111,9 +110,9 @@ const ListUser = () => {
           </div>
 
           <div style={{ marginTop: 25, height: 550, width: "100%" }}>
-            {users && users.length > 0 ? (
+            {filteredUsers && filteredUsers.length > 0 ? (
               <DataGrid
-                rows={users}
+                rows={filteredUsers}
                 columns={columns.concat(actionColumn)}
                 initialState={{
                   pagination: {

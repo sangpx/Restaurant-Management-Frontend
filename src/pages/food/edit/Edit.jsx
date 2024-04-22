@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import {
   detailFood,
-  selectFood, 
+  selectFood,
   updateFood,
 } from "../../../store/food/foodSlice";
 
@@ -46,6 +46,7 @@ const EditFood = ({ title }) => {
     }
   }, [food]);
 
+  //get Alls Categories
   useEffect(() => {
     dispatch(getAlls());
   }, [dispatch]);

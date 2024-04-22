@@ -18,6 +18,7 @@ const initialState = {
   status: "idle",
   loading: false,
   message: {},
+  isAuthenticated: false,
 };
 
 const token = localStorage.getItem("accessToken");
@@ -126,6 +127,22 @@ export const detailUser = createAsyncThunk(
   }
 );
 
+export const getCurrentUser = createAsyncThunk(
+  "users/getCurrentUser",
+  async (token) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/users/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const logout = () => {
   localStorage.removeItem("accessToken");
   return { type: "users/logout" };
@@ -140,6 +157,7 @@ const authSlice = createSlice({
       state.userInfo = {};
       state.status = "idle";
       state.listUsers = [];
+      state.isAuthenticated = false;
     },
   },
   extraReducers(builder) {
@@ -176,6 +194,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.userInfo = action.payload;
         state.userToken = action.payload.accessToken; //action.payload ===== response.data
+        state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
@@ -218,17 +237,28 @@ const authSlice = createSlice({
       .addCase(detailUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(getCurrentUser.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.status = "done";
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(getCurrentUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-// tao Reducer: voi moi State se co mot Reducer de
-// chiu trach nhiem thay doi cac State day
 export const userReducer = authSlice.reducer;
 
 //selector
 export const selectAllUsers = (state) => state.userReducer.listUsers;
 export const selectUser = (state) => state.userReducer.user;
 export const selectAllRoles = (state) => state.userReducer.listRoles;
+export const isAuthenticated = (state) => state.userReducer.isAuthenticated;
 
 export default userReducer;

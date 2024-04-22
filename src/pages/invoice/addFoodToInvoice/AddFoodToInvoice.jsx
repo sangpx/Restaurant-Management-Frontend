@@ -15,7 +15,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useEffect, useState, useRef, forwardRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 import Select from "@mui/material/Select";
 import {
@@ -39,6 +39,7 @@ import PrintIcon from "@mui/icons-material/Print";
 import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
 import ReactToPrint from "react-to-print";
 import moment from "moment";
+import ComponentToPrint from "./ComponentToPrint";
 
 const AddFoodToInvoiceDetail = () => {
   let componentRef = useRef();
@@ -122,6 +123,7 @@ const AddFoodToInvoiceDetail = () => {
         foodId: selectedRowToDelete.foodId,
       })
     );
+    alert("Xóa món ăn thành công!");
     setOpenDeleteDialog(false);
   };
 
@@ -138,6 +140,7 @@ const AddFoodToInvoiceDetail = () => {
 
   const handleSaveEdit = () => {
     dispatch(updateToInvoice({ ...selectedRow, quantity: editedQuantity }));
+    alert("Cập nhật món ăn thành công!");
     setOpenEditModal(false);
     dispatch(getAllDetailInvoices(id));
   };
@@ -228,6 +231,7 @@ const AddFoodToInvoiceDetail = () => {
     dispatch(
       addFoodToInvoice({ invoiceId: id, foodId: selectedFood, quantity })
     );
+    alert("Thêm món ăn thành công!");
     dispatch(getAllDetailInvoices(id));
     setSelectedFood("");
     setQuantity(1);
@@ -237,7 +241,7 @@ const AddFoodToInvoiceDetail = () => {
     event.preventDefault(event);
     setSelectedFood("");
     setQuantity(1);
-    navigate("/bookings");
+    navigate("/invoices");
   };
 
   const calculateTotalAmount = () => {
@@ -248,85 +252,18 @@ const AddFoodToInvoiceDetail = () => {
     return sum;
   };
 
-  // Định dạng tổng tiền thành VNĐ
   const formattedTotalAmount = calculateTotalAmount().toLocaleString("vi-VN", {
     style: "currency",
     currency: "VND",
   });
 
   const handlePayment = (invoiceId) => {
-    dispatch(payInvoice(invoiceId));
-    alert("Thanh toán thành công!");
+    if (status === "ORDERED_FOOD") {
+      dispatch(payInvoice(invoiceId));
+      alert("Thanh toán thành công!");
+    }
     dispatch(getAllInvoices());
   };
-
-  const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
-    return (
-      <div ref={ref}>
-        <div style={{ padding: "20px", border: "1px solid #ccc" }}>
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-            HÓA ĐƠN THANH TOÁN
-          </h2>
-          <div style={{ marginBottom: "20px" }}>
-            <div>
-              <strong>Số HD:</strong> {id}
-            </div>
-            <div>
-              <strong>Giờ vào:</strong> {checkInTime}
-            </div>
-            <div>
-              <strong>Giờ ra:</strong> {checkOutTime}
-            </div>
-            <div>
-              <strong>Bàn ăn:</strong> {deskId}
-            </div>
-            <div>
-              <strong>Trạng thái:</strong>{" "}
-              {status === "PAID" ? "Đã thanh toán" : status}
-            </div>
-          </div>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "1px solid #ccc" }}>
-                <th style={{ textAlign: "left", padding: "8px" }}>
-                  Tên món ăn
-                </th>
-                <th style={{ textAlign: "left", padding: "8px" }}>Số lượng</th>
-                <th style={{ textAlign: "left", padding: "8px" }}>
-                  Thành tiền
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoiceDetails.map((item, index) => (
-                <tr key={index} style={{ borderBottom: "1px solid #ccc" }}>
-                  <td style={{ padding: "8px" }}>{item.nameFood}</td>
-                  <td style={{ padding: "8px" }}>{item.quantity}</td>
-                  <td style={{ padding: "8px" }}>
-                    {formatIntoMoney(item.intoMoney)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div style={{ marginTop: "20px", textAlign: "right" }}>
-            <strong>Tổng tiền:</strong>{" "}
-            {formatIntoMoney(calculateTotalAmount())}
-          </div>
-        </div>
-        <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-          Nhà hàng Grill63 - 54 Liễu Giai - Ba Đình - Hà Nội
-        </h4>
-        <h5 style={{ textAlign: "center", marginTop: "20px" }}>
-          +84 24 3333 1701
-        </h5>
-
-        <h4 style={{ textAlign: "center", marginTop: "20px" }}>
-          Trân trọng cảm ơn quý khách! Hẹn gặp lại
-        </h4>
-      </div>
-    );
-  });
 
   return (
     <div className="new">
@@ -376,11 +313,13 @@ const AddFoodToInvoiceDetail = () => {
                     onChange={handleFoodChange}
                     name="foodId"
                   >
-                    {foods.map((food) => (
-                      <MenuItem key={food.id} value={food.id}>
-                        {food.name}
-                      </MenuItem>
-                    ))}
+                    {foods &&
+                      foods.length > 0 &&
+                      foods.map((food) => (
+                        <MenuItem key={food.id} value={food.id}>
+                          {food.name}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </div>
@@ -438,13 +377,13 @@ const AddFoodToInvoiceDetail = () => {
                   className="right-top_left"
                   onClick={() => handlePayment(id)}
                 >
-                  <Tooltip title="Thanh toán">
-                    <div className="formButton">
-                      <Button>
+                  <div className="formButton">
+                    <Tooltip title="Thanh toán">
+                      <Button disabled={status === "PENDING"}>
                         <PaymentIcon />
                       </Button>
-                    </div>
-                  </Tooltip>
+                    </Tooltip>
+                  </div>
                 </div>
 
                 <div className="right-top_left">
@@ -460,7 +399,7 @@ const AddFoodToInvoiceDetail = () => {
                       content={() => componentRef}
                     />
                   ) : (
-                    <Tooltip disabled title="In Hóa đơn">
+                    <Tooltip title="In Hóa đơn">
                       <span>
                         <Button disabled>
                           <PrintIcon />

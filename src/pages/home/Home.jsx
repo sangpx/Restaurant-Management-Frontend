@@ -1,5 +1,8 @@
 import Sidebar from "../../components/sidebar/Sidebar";
-// import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../../components/navbar/Navbar";
+import Widget from "../../components/widget/Widget";
+import Chart from "../../components/chart/Chart";
+import Featured from "../../components/featured/Featured";
 import "./home.scss";
 
 const Home = () => {
@@ -7,9 +10,16 @@ const Home = () => {
     <div className="home">
       <Sidebar />
       <div className="homeContainer">
-        {/* <Navbar /> */}
-        <div className="widgets">
-          <h1 className="h1-text">Chào mừng bạn đến với giao diện Quản lý</h1>
+        <Navbar />
+        {/*  <div className="widgets">
+          <Widget type="user" />
+          <Widget type="order" />
+          <Widget type="earning" />
+          <Widget type="balance" />
+        </div> */}
+        <div className="charts">
+          <Featured />
+          <Chart title="Thống kê doanh thu trong 12 tháng" aspect={2 / 1} />
         </div>
       </div>
     </div>
