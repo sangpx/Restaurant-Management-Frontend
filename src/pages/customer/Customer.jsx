@@ -1,11 +1,24 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { customerAddBooking } from "../../store/booking/bookingSlice";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { getAlls, selectAllDesks } from "../../store/desk/deskSlice";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
 
 const CustomerHome = () => {
   const dispatch = useDispatch();
+  const desks = useSelector(selectAllDesks);
   const [newCustomerBooking, setNewCustomerBooking] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedDesk, setSelectedDesk] = useState("");
 
   const handleInputChange = useCallback((e) => {
     setNewCustomerBooking((prevCustomerBooking) => ({
@@ -26,6 +39,7 @@ const CustomerHome = () => {
     }
   };
 
+  //Xử lý format ngày tháng năm của bookingTime
   const formatBookingTime = (dateTimeString) => {
     // Tạo một đối tượng Date từ chuỗi thời gian
     const dateTime = new Date(dateTimeString);
@@ -43,9 +57,11 @@ const CustomerHome = () => {
     return formattedDateTime;
   };
 
+  //Xử lý khi khách hàng bấm "Đặt bàn"
   const handleCustomerAddBooking = (event) => {
     event.preventDefault();
     dispatch(customerAddBooking(newCustomerBooking));
+    console.log("data newCustomerBooking: ", newCustomerBooking);
     alert("Quý khách đã điền thông tin đặt bàn!");
     setNewCustomerBooking({
       customerName: "",
@@ -55,7 +71,33 @@ const CustomerHome = () => {
       bookingTime: "",
       quantityPerson: 0,
     });
+    setSelectedDesk("");
+    dispatch(getAlls());
   };
+
+  const handleDeskChange = (e) => {
+    const selectedDeskId = e.target.value;
+    setSelectedDesk(selectedDeskId);
+    setNewCustomerBooking((prev) => ({
+      ...prev,
+      deskId: selectedDeskId,
+    }));
+  };
+
+  useEffect(() => {
+    dispatch(getAlls());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const emptyDesks = desks.filter((desk) => desk.status === "EMPTY");
+
+    // Kiểm tra nếu không còn bàn trống
+    if (emptyDesks.length === 0 && desks.length > 0) {
+      setOpenDialog(true);
+    } else {
+      setOpenDialog(false);
+    }
+  }, [desks]);
 
   return (
     <>
@@ -439,7 +481,6 @@ const CustomerHome = () => {
                     placeholder="Thời gian đặt"
                     data-rule="minlen:4"
                     data-msg="Please enter at least 4 chars"
-                    // value={newCustomerBooking.bookingTime}
                     value={formatBookingTime(newCustomerBooking.bookingTime)}
                     onChange={handleInputChange}
                   />
@@ -458,6 +499,29 @@ const CustomerHome = () => {
                     onChange={handleQuantityChange}
                   />
                   <div className="validate"></div>
+                </div>
+                <div className="col-lg-4 col-md-6 form-group mt-3 formInput">
+                  <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel id="deskId">Số bàn</InputLabel>
+                    <Select
+                      className="input"
+                      labelId="deskId"
+                      id="deskId"
+                      label="Tên bàn"
+                      name="deskId"
+                      value={selectedDesk}
+                      onChange={handleDeskChange}
+                    >
+                      {desks &&
+                        desks
+                          .filter((desk) => desk.status === "EMPTY")
+                          .map((desk) => (
+                            <MenuItem key={desk.id} value={desk.id}>
+                              {desk.name}
+                            </MenuItem>
+                          ))}
+                    </Select>
+                  </FormControl>
                 </div>
               </div>
               <div className="text-center">
@@ -681,6 +745,29 @@ const CustomerHome = () => {
       >
         <i className="bi bi-arrow-up-short"></i>
       </a>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Hiện tại đã hết bàn. Xin vui lòng thử lại sau.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setOpenDialog(false)}
+            color="primary"
+            autoFocus
+          >
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

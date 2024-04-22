@@ -24,10 +24,11 @@ const ListInvoice = () => {
   const [defaultSortModel, setDefaultSortModel] = useState([
     {
       field: "bookingId",
-      sort: "desc", // DESC là giá trị mặc định để sắp xếp giảm dần
+      sort: "desc",
     },
   ]);
 
+  //Đổi trạng thái từ Tiếng Anh -> Tiếng Việt
   const getStatusNameInvoice = (status) => {
     const statusMapInvoice = {
       PENDING: "Đang chờ",
@@ -37,6 +38,7 @@ const ListInvoice = () => {
     return statusMapInvoice[status] || status;
   };
 
+  //Cột tiêu đề của Table Invoice
   const columnsInvoices = [
     {
       field: "bookingId",
@@ -104,13 +106,13 @@ const ListInvoice = () => {
     },
   ];
 
+  //Cột tác vụ
   const actionColumn = [
     {
       field: "action",
       headerName: "Tác vụ",
       width: 200,
       renderCell: (params) => {
-        //Check điều kiện nếu trong trạng thái "PAID"
         if (params.row.status === "PAID") {
           return (
             <div className="cellAction">
@@ -141,6 +143,7 @@ const ListInvoice = () => {
     },
   ];
 
+  //Xử lý khi ấn nút Refresh
   const handleRefresh = () => {
     dispatch(getAllInvoices());
   };
@@ -148,11 +151,6 @@ const ListInvoice = () => {
   useEffect(() => {
     if (jwt) {
       dispatch(getAllInvoices());
-    }
-  }, [jwt, dispatch, refresh]);
-
-  useEffect(() => {
-    if (jwt) {
       dispatch(getAllBookings());
     }
   }, [jwt, dispatch, refresh]);
@@ -185,25 +183,6 @@ const ListInvoice = () => {
           <div className="new">
             <div className="newContainer">
               <div className="bottom" style={{ flexDirection: "row" }}>
-                {/* <div className="left">
-                  {bookings && bookings.length > 0 ? (
-                    <Box sx={{ height: 550, width: "100%" }}>
-                      <DataGrid
-                        rows={bookings}
-                        columns={columnsBookings}
-                        initialState={{
-                          pagination: {
-                            pageSize: 8,
-                          },
-                        }}
-                        pageSizeOptions={[5, 10]}
-                        disableSelectionOnClick
-                      />
-                    </Box>
-                  ) : (
-                    <CircularProgress />
-                  )}
-                </div> */}
                 <div className="right">
                   <div style={{ flex: 1, paddingLeft: 10 }}>
                     <div style={{ height: 550, width: "100%" }}>

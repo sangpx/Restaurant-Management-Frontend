@@ -63,15 +63,17 @@ const ListBooking = () => {
   const [defaultSortModel, setDefaultSortModel] = useState([
     {
       field: "id",
-      sort: "desc", // DESC là giá trị mặc định để sắp xếp giảm dần
+      sort: "desc",
     },
   ]);
 
+  //xử lý mở dialog chọn bàn
   const handleAddDeskClickOpen = (id) => {
     setSelectedBookingId(id);
     setOpenAddDesk(true);
   };
 
+  //xử lý khi giữ bàn cho khách
   const handlHoldingDeskCustomer = () => {
     dispatch(
       holdingDeskCustomer({
@@ -84,11 +86,13 @@ const ListBooking = () => {
     handleClose();
   };
 
+  //xử lý khi khách tới nhận bàn thì xác nhận
   const handleConfirmDeskCustomer = (selectedBookingId) => {
     dispatch(confirmDeskCustomer(selectedBookingId));
     alert("Nhận bàn thành công!");
   };
 
+  //Đổi trạng thái từ Tiếng Anh -> Tiếng Việt
   const getStatusNameBooking = (status) => {
     const statusMapBooking = {
       INACTIVE: "Đã hoàn thành",
@@ -100,6 +104,7 @@ const ListBooking = () => {
     return statusMapBooking[status] || status;
   };
 
+  //Cột của Table Booking
   const columnsBookings = [
     {
       field: "id",
@@ -110,7 +115,7 @@ const ListBooking = () => {
     {
       field: "customerName",
       headerName: "Tên khách hàng",
-      width: 150,
+      width: 200,
       editable: true,
     },
     {
@@ -129,7 +134,7 @@ const ListBooking = () => {
     {
       field: "email",
       headerName: "Email",
-      width: 170,
+      width: 200,
       editable: true,
     },
     {
@@ -147,6 +152,7 @@ const ListBooking = () => {
     },
   ];
 
+  //Cột tác vụ
   const actionColumn = [
     {
       field: "action",
@@ -255,17 +261,20 @@ const ListBooking = () => {
     selectInvoiceByBookingId(state, selectedBookingId)
   );
 
+  //xử lý chuyển trang khi ấn gọi món ăn
   const handleAddFoodInvoice = (id) => {
     navigate(`/invoices/addFoodToInvoice/${invoice.id}`);
     console.log("ok", invoice.id);
   };
 
+  //xử lý đóng Dialog
   const handleClose = () => {
     setOpen(false);
     setOpenAddDesk(false);
     setOpenAddFood(false);
   };
 
+  //xử lý thêm hóa đơn
   const handleAddInvoice = () => {
     dispatch(createInvoice(selectedBookingId));
     alert("Thêm hóa đơn thành công!");
@@ -273,6 +282,7 @@ const ListBooking = () => {
     handleClose();
   };
 
+  //xử lý khi ấn Refresh
   const handleRefresh = () => {
     dispatch(getAllInvoices());
     dispatch(getAllBookings());
@@ -302,6 +312,7 @@ const ListBooking = () => {
     }
   }, [jwt, dispatch, refresh]);
 
+  //xử lý khi thêm đặt bàn mới
   const handleAddBooking = (event) => {
     event.preventDefault();
     const bookingData = {
@@ -324,6 +335,7 @@ const ListBooking = () => {
     setSelectedDesk("");
   };
 
+  //xử lý khi hủy đặt bàn
   const handleCancel = (event) => {
     event.preventDefault();
     setNewBooking([

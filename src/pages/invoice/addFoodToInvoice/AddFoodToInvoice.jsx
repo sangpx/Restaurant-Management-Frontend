@@ -44,6 +44,7 @@ import ComponentToPrint from "./ComponentToPrint";
 const AddFoodToInvoiceDetail = () => {
   let componentRef = useRef();
 
+  //Cột tiêu đề Table Invoice Detail
   const columnsInvoiceDetail = [
     {
       field: "invoiceId",
@@ -110,6 +111,7 @@ const AddFoodToInvoiceDetail = () => {
     });
   };
 
+  //Xử lý khi ấn icon delete
   const handleDeleteRow = (row) => {
     setSelectedRowToDelete(row);
     setOpenDeleteDialog(true);
@@ -127,6 +129,7 @@ const AddFoodToInvoiceDetail = () => {
     setOpenDeleteDialog(false);
   };
 
+  //Xử lý khi ấn icon edit
   const handleEditRow = (row) => {
     setSelectedRow(row);
     setOpenEditModal(true);
@@ -134,10 +137,12 @@ const AddFoodToInvoiceDetail = () => {
     setEditedQuantity(row.quantity);
   };
 
+  //Xử lý khi ấn nút đóng Dialog
   const handleCloseEditModal = () => {
     setOpenEditModal(false);
   };
 
+  //Xử lý khi ấn nút Chỉnh sửa
   const handleSaveEdit = () => {
     dispatch(updateToInvoice({ ...selectedRow, quantity: editedQuantity }));
     alert("Cập nhật món ăn thành công!");
@@ -145,6 +150,7 @@ const AddFoodToInvoiceDetail = () => {
     dispatch(getAllDetailInvoices(id));
   };
 
+  //Cột tác vụ
   const actionColumn = [
     {
       field: "action",
@@ -181,6 +187,7 @@ const AddFoodToInvoiceDetail = () => {
     },
   ];
 
+  //Xử lý khi ấn nút Refresh
   const handleRefresh = () => {
     dispatch(getAllDetailInvoices(id));
   };
@@ -191,13 +198,7 @@ const AddFoodToInvoiceDetail = () => {
 
   useEffect(() => {
     dispatch(getAllDetailInvoices(id));
-  }, [dispatch, refresh]);
-
-  useEffect(() => {
     dispatch(getAlls());
-  }, [dispatch, refresh]);
-
-  useEffect(() => {
     dispatch(getAllInvoices());
   }, [dispatch, refresh]);
 
@@ -226,6 +227,7 @@ const AddFoodToInvoiceDetail = () => {
     }
   };
 
+  //Xử lý khi ấn Thêm món
   const handleOrderFood = (event) => {
     event.preventDefault();
     dispatch(
@@ -237,6 +239,7 @@ const AddFoodToInvoiceDetail = () => {
     setQuantity(1);
   };
 
+  //Xử lý khi ấn hủy thêm món
   const handleCancel = (event) => {
     event.preventDefault(event);
     setSelectedFood("");
@@ -244,6 +247,7 @@ const AddFoodToInvoiceDetail = () => {
     navigate("/invoices");
   };
 
+  //Xử lý tính toán Tổng tiền
   const calculateTotalAmount = () => {
     let sum = 0;
     invoiceDetails.forEach((row) => {
@@ -252,11 +256,13 @@ const AddFoodToInvoiceDetail = () => {
     return sum;
   };
 
+  //Quy đổi tiền sang tiền VNĐ
   const formattedTotalAmount = calculateTotalAmount().toLocaleString("vi-VN", {
     style: "currency",
     currency: "VND",
   });
 
+  //Xử lý khi ấn nút Thanh toán
   const handlePayment = (invoiceId) => {
     if (status === "ORDERED_FOOD") {
       dispatch(payInvoice(invoiceId));
@@ -373,11 +379,8 @@ const AddFoodToInvoiceDetail = () => {
               style={{ display: "flex", justifyContent: "space-between" }}
             >
               <div className="form">
-                <div
-                  className="right-top_left"
-                  onClick={() => handlePayment(id)}
-                >
-                  <div className="formButton">
+                <div className="right-top_left">
+                  <div className="formButton" onClick={() => handlePayment(id)}>
                     <Tooltip title="Thanh toán">
                       <Button disabled={status === "PENDING"}>
                         <PaymentIcon />

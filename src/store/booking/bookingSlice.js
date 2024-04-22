@@ -41,7 +41,6 @@ export const createBooking = createAsyncThunk(
           },
         }
       );
-      console.log("Data Đặt bàn: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -82,7 +81,6 @@ export const holdingDeskCustomer = createAsyncThunk(
           },
         }
       );
-      console.log("response holdingDeskCustomer: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -103,7 +101,6 @@ export const confirmDeskCustomer = createAsyncThunk(
           },
         }
       );
-      console.log("response confirmDeskCustomer: ", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -172,6 +169,14 @@ const bookingSlice = createSlice({
         state.listBookings.push(action.payload); //action.payload ===== response.data
       })
       .addCase(createBooking.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(customerAddBooking.fulfilled, (state, action) => {
+        state.status = "done";
+        state.listBookings.push(action.payload); //action.payload ===== response.data
+      })
+      .addCase(customerAddBooking.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
