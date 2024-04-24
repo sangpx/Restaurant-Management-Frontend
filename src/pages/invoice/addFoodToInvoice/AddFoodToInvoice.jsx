@@ -244,7 +244,7 @@ const AddFoodToInvoiceDetail = () => {
     event.preventDefault(event);
     setSelectedFood("");
     setQuantity(1);
-    navigate("/invoices");
+    navigate("/bookings");
   };
 
   //Xử lý tính toán Tổng tiền

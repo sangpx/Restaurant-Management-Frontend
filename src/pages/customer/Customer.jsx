@@ -61,7 +61,6 @@ const CustomerHome = () => {
   const handleCustomerAddBooking = (event) => {
     event.preventDefault();
     dispatch(customerAddBooking(newCustomerBooking));
-    console.log("data newCustomerBooking: ", newCustomerBooking);
     alert("Quý khách đã điền thông tin đặt bàn!");
     setNewCustomerBooking({
       customerName: "",

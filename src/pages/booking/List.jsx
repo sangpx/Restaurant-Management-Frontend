@@ -246,11 +246,13 @@ const ListBooking = () => {
     },
   ];
 
+  //Xử lý khi ấn vào nút Add
   const handleClickOpen = (id) => {
     setSelectedBookingId(id);
     setOpen(true);
   };
 
+  //Xử lý khi ấn vào nút PlaylistAdd
   const handleClickAddFoodOpen = (id) => {
     setSelectedBookingId(id);
     setOpenAddFood(true);
@@ -264,7 +266,6 @@ const ListBooking = () => {
   //xử lý chuyển trang khi ấn gọi món ăn
   const handleAddFoodInvoice = (id) => {
     navigate(`/invoices/addFoodToInvoice/${invoice.id}`);
-    console.log("ok", invoice.id);
   };
 
   //xử lý đóng Dialog
