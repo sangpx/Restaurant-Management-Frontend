@@ -127,6 +127,7 @@ const AddFoodToInvoiceDetail = () => {
     );
     alert("Xóa món ăn thành công!");
     setOpenDeleteDialog(false);
+    dispatch(getAllDetailInvoices(id));
   };
 
   //Xử lý khi ấn icon edit

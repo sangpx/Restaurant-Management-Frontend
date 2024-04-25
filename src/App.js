@@ -108,12 +108,11 @@ function App() {
                     element={<AddFoodToInvoiceDetail title="Gọi món" />}
                   />
                 </Route>
-
-                <Route path="home">
-                  <Route index element={<CustomerHome />} />
-                </Route>
               </>
             )}
+            <Route path="home">
+              <Route index element={<CustomerHome />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

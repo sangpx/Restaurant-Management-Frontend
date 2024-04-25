@@ -62,8 +62,8 @@ const EditUser = ({ title }) => {
       password: "",
       phone: "",
     });
-    dispatch(getAlls());
     navigate("/users");
+    dispatch(getAlls());
   };
 
   const handleCancel = (event) => {

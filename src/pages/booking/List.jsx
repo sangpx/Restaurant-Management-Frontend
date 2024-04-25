@@ -21,6 +21,7 @@ import { getAlls, selectAllDesks } from "../../store/desk/deskSlice";
 import {
   confirmDeskCustomer,
   createBooking,
+  deleteBooking,
   getAllBookings,
   holdingDeskCustomer,
   selectAllBookings,
@@ -39,6 +40,7 @@ import {
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ListBooking = () => {
   const navigate = useNavigate();
@@ -51,6 +53,7 @@ const ListBooking = () => {
   const [open, setOpen] = useState(false);
   const [openAddFood, setOpenAddFood] = useState(false);
   const [openAddDesk, setOpenAddDesk] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [newBooking, setNewBooking] = useState({
     customerName: "",
     address: "",
@@ -73,6 +76,20 @@ const ListBooking = () => {
     setOpenAddDesk(true);
   };
 
+  //Xử lý mở dialog xóa đặt bàn
+  const handleDeleteRow = (id) => {
+    setSelectedBookingId(id);
+    setOpenDeleteDialog(true);
+  };
+
+  //Xử lý khi ấn Xóa đặt bàn
+  const handleConfirmDelete = () => {
+    dispatch(deleteBooking(selectedBookingId));
+    alert("Xóa đặt bàn thành công!");
+    setOpenDeleteDialog(false);
+    dispatch(getAllBookings());
+  };
+
   //xử lý khi giữ bàn cho khách
   const handlHoldingDeskCustomer = () => {
     dispatch(
@@ -82,7 +99,6 @@ const ListBooking = () => {
       })
     );
     alert("Giữ chỗ thành công!");
-    dispatch(getAllBookings());
     handleClose();
   };
 
@@ -90,6 +106,7 @@ const ListBooking = () => {
   const handleConfirmDeskCustomer = (selectedBookingId) => {
     dispatch(confirmDeskCustomer(selectedBookingId));
     alert("Nhận bàn thành công!");
+    dispatch(getAllBookings());
   };
 
   //Đổi trạng thái từ Tiếng Anh -> Tiếng Việt
@@ -157,7 +174,7 @@ const ListBooking = () => {
     {
       field: "action",
       headerName: "Tác vụ",
-      width: 150,
+      width: 250,
       renderCell: (params) => {
         let iconComponent;
         switch (params.row.status) {
@@ -205,14 +222,20 @@ const ListBooking = () => {
           case "CONFIRMED":
             iconComponent = (
               <div className="cellAction">
-                <div
-                  className="viewButton"
-                  onClick={() => {
-                    handleClickOpen(params.row.id);
-                  }}
-                >
+                <div className="viewButton">
                   <Tooltip title="Thêm hóa đơn">
-                    <AddCircleIcon />
+                    <AddCircleIcon
+                      onClick={() => {
+                        handleClickOpen(params.row.id);
+                      }}
+                    />
+                  </Tooltip>
+                  <Tooltip title="Xóa">
+                    <DeleteIcon
+                      onClick={() => {
+                        handleDeleteRow(params.row.id);
+                      }}
+                    />
                   </Tooltip>
                 </div>
               </div>
@@ -256,6 +279,7 @@ const ListBooking = () => {
   const handleClickAddFoodOpen = (id) => {
     setSelectedBookingId(id);
     setOpenAddFood(true);
+    dispatch(getAllBookings());
     dispatch(getInvoiceByBookingId(id));
   };
 
@@ -571,6 +595,27 @@ const ListBooking = () => {
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
           <Button onClick={handlHoldingDeskCustomer}>Thêm mới</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Xóa Đặt bàn */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Xóa đặt bàn"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn xóa đặt bàn?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)}>Hủy</Button>
+          <Button onClick={handleConfirmDelete} autoFocus>
+            Xóa
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

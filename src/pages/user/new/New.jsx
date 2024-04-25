@@ -73,8 +73,8 @@ const NewUser = ({ title }) => {
       role: [],
     });
     setSelectedRole("");
-    dispatch(getAlls());
     navigate("/users");
+    dispatch(getAlls());
   };
 
   const handleCancel = (event) => {

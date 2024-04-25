@@ -3,7 +3,12 @@ import Sidebar from "../../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { TextField } from "@mui/material";
-import { detailDesk, selectDesk, updateDesk } from "../../../store/desk/deskSlice";
+import {
+  detailDesk,
+  getAlls,
+  selectDesk,
+  updateDesk,
+} from "../../../store/desk/deskSlice";
 import { useEffect, useState } from "react";
 
 const EditDesk = ({ title }) => {
@@ -33,6 +38,7 @@ const EditDesk = ({ title }) => {
     };
     dispatch(updateDesk(deskData));
     navigate("/desks");
+    dispatch(getAlls());
   };
 
   const handleCancel = (event) => {

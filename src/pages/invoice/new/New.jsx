@@ -10,6 +10,7 @@ import {
 } from "../../../store/booking/bookingSlice";
 import {
   createInvoice,
+  getAllInvoices,
   selectAllInvoices,
 } from "../../../store/invoice/invoiceSlice";
 import SidebarBooking from "../../../components/sidebarBooking/SidebarBooking";
@@ -34,6 +35,7 @@ const NewInvoice = ({ title }) => {
     dispatch(createInvoice(selectedBooking));
     setSelectedBooking("");
     navigate("/invoices");
+    dispatch(getAllInvoices());
   };
 
   const handleCancel = (event) => {
