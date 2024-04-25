@@ -271,12 +271,41 @@ const AddFoodToInvoiceDetail = () => {
     dispatch(getAllInvoices());
   };
 
+  const columnsFood = [
+    { field: "name", headerName: "Tên Món ăn", width: 330 },
+    { field: "description", headerName: "Mô tả", width: 230 },
+    { field: "price", headerName: "Giá", width: 130 },
+    { field: "categoryName", headerName: "Loại món ăn", width: 130 },
+  ];
+
   return (
     <div className="new">
       <SidebarBooking />
       <div className="newContainer">
         <div className="bottom">
           <div className="right">
+            {/* DataGrid Food*/}
+            <div style={{ marginBottom: 25, height: 250, width: "100%" }}>
+              {foods && foods.length > 0 ? (
+                <DataGrid
+                  rows={foods}
+                  columns={columnsFood}
+                  initialState={{
+                    pagination: {
+                      pageSize: 5,
+                    },
+                  }}
+                  pageSizeOptions={[5, 10]}
+                />
+              ) : (
+                <CircularProgress />
+              )}
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="right" style={{ marginTop: 15 }}>
             <form onSubmit={handleOrderFood} method="post" className="form">
               <div className="formInput">
                 <TextField
@@ -351,7 +380,7 @@ const AddFoodToInvoiceDetail = () => {
                 </Button>
               </div>
             </div>
-            {/* DataGrid */}
+            {/* DataGrid Invoice Details */}
             <div style={{ flex: 1, padding: 10 }}>
               {invoiceDetails && invoiceDetails.length > 0 ? (
                 <Box sx={{ height: 280, width: "100%" }}>

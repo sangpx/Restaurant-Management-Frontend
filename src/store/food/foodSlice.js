@@ -8,9 +8,23 @@ const initialState = {
   food: {},
   error: null,
   status: "idle",
+  countFood: 0,
 };
 
 const token = localStorage.getItem("accessToken");
+
+export const getCountFood = createAsyncThunk("foods/countFood", async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/foods/countFood`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const getAlls = createAsyncThunk("foods/getAlls", async () => {
   try {
@@ -84,24 +98,21 @@ export const detailFood = createAsyncThunk(
   }
 );
 
-export const deleteFood = createAsyncThunk(
-  "foods/deleteFood",
-  async (id) => {
-    try {
-      const response = await axios.delete(
-        `${API_BASE_URL}/foods/deleteFood/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+export const deleteFood = createAsyncThunk("foods/deleteFood", async (id) => {
+  try {
+    const response = await axios.delete(
+      `${API_BASE_URL}/foods/deleteFood/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
   }
-);
+});
 
 const foodSlice = createSlice({
   name: "foods",
@@ -146,7 +157,7 @@ const foodSlice = createSlice({
           (food) => food.id === updatedFood.id
         );
         if (index !== -1) {
-          state.listFoods[index] = updatedFood; 
+          state.listFoods[index] = updatedFood;
         }
       })
       .addCase(deleteFood.pending, (state, action) => {
@@ -158,6 +169,10 @@ const foodSlice = createSlice({
       .addCase(deleteFood.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(getCountFood.fulfilled, (state, action) => {
+        state.status = "done";
+        state.countFood = action.payload;
       });
   },
 });
@@ -169,5 +184,6 @@ export const foodReducer = foodSlice.reducer;
 //selector
 export const selectAllFoods = (state) => state.foodReducer.listFoods;
 export const selectFood = (state) => state.foodReducer.food;
+export const countFoods = (state) => state.foodReducer.countFood;
 
 export default foodReducer;

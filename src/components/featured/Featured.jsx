@@ -9,9 +9,11 @@ import {
 } from "../../store/revenueReport/revenueSlice";
 import { useEffect, useState } from "react";
 import { Select, MenuItem, Button } from "@mui/material";
+import { countFoods, getCountFood } from "../../store/food/foodSlice";
 
 const Featured = () => {
   const dispatch = useDispatch();
+
   const totalPriceTodayRevenue = useSelector(selectTodayRevenue);
   const totalPriceMonthRevenue = useSelector(selectMonthRevenue);
 
@@ -28,15 +30,11 @@ const Featured = () => {
 
   useEffect(() => {
     dispatch(getTodayRevenue());
-  }, [dispatch]);
-
-  useEffect(() => {
+    dispatch(getMonthlyRevenue({ year, month }));
     dispatch(getMonthlyRevenue({ year, month }));
   }, [dispatch]);
 
-  const handeGetPriceMonthRevenue = () => {
-    dispatch(getMonthlyRevenue({ year, month }));
-  };
+  const handeGetPriceMonthRevenue = () => {};
 
   return (
     <div className="featured">

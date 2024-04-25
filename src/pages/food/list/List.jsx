@@ -6,7 +6,6 @@ import { Button, CircularProgress, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { getAlls, selectAllFoods } from "../../../store/food/foodSlice";
 import Tooltip from "@mui/material/Tooltip";
@@ -52,7 +51,9 @@ const ListFood = () => {
   ];
 
   useEffect(() => {
-    dispatch(getAlls());
+    if (jwt) {
+      dispatch(getAlls());
+    }
   }, [dispatch]);
 
   return (

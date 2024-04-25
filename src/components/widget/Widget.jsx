@@ -4,18 +4,19 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { useDispatch, useSelector } from "react-redux";
+import { countFoods } from "../../store/food/foodSlice";
 
 const Widget = ({ type }) => {
+  const dispatch = useDispatch();
+  const countFood = useSelector(countFoods);
   let data;
 
   //temporary
-  const amount = 100;
-  const diff = 20;
-
   switch (type) {
     case "user":
       data = {
-        title: "Người dùng",
+        title: "Nhân viên",
         isMoney: false,
         link: "See all users",
         icon: (
@@ -31,7 +32,7 @@ const Widget = ({ type }) => {
       break;
     case "order":
       data = {
-        title: "ORDERS",
+        title: "Món ăn",
         isMoney: false,
         link: "View all orders",
         icon: (
@@ -47,7 +48,7 @@ const Widget = ({ type }) => {
       break;
     case "earning":
       data = {
-        title: "EARNINGS",
+        title: "Bàn ăn",
         isMoney: true,
         link: "View net earnings",
         icon: (
@@ -82,17 +83,8 @@ const Widget = ({ type }) => {
     <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
-        <span className="counter">
-          {data.isMoney && "$"} {amount}
-        </span>
+        <span className="counter">{countFood}</span>
         <span className="link">{data.link}</span>
-      </div>
-      <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
-        {data.icon}
       </div>
     </div>
   );

@@ -28,18 +28,16 @@ function App() {
   const user = useSelector((state) => state.userReducer.user);
   const isAuthenticate = useSelector(isAuthenticated);
   const token = localStorage.getItem("accessToken");
-  console.log("user: ", user);
 
   useEffect(() => {
     if (token) {
       dispatch(getCurrentUser(token));
     }
-  }, [token]);
+  }, [token, dispatch]);
 
   let authorities;
   if (user.authorities && user.authorities.length > 0) {
     authorities = user?.authorities[0]?.authority;
-    console.log("authorities: ", authorities);
   } else {
     console.log("Không có quyền được tìm thấy");
   }
@@ -48,55 +46,74 @@ function App() {
     <div className="app">
       <BrowserRouter>
         <Routes>
+          z
           <Route path="signin" element={<SignInSide />} />
           <Route path="/">
             {/* Admin Route*/}
-
-            <Route index element={<Home />} />
-            <Route path="users">
-              <Route index element={<ListUser />} />
-              <Route path="new" element={<NewUser title="Thêm mới" />} />
-              <Route path="edit/:id" element={<EditUser title="Chỉnh sửa" />} />
-            </Route>
-            <Route path="foods">
-              <Route index element={<ListFood />} />
-              <Route path="new" element={<NewFood title="Thêm mới" />} />
-              <Route path="edit/:id" element={<EditFood title="Chỉnh sửa" />} />
-            </Route>
-            <Route path="categories">
-              <Route index element={<ListCategory />} />
-              <Route path="new" element={<NewCategory title="Thêm mới" />} />
-              <Route
-                path="edit/:id"
-                element={<EditCategory title="Chỉnh sửa" />}
-              />
-            </Route>
-            <Route path="desks">
-              <Route index element={<ListDesk />} />
-              <Route path="new" element={<NewDesk title="Thêm mới" />} />
-              <Route path="edit/:id" element={<EditDesk title="Chỉnh sửa" />} />
-            </Route>
+            {authorities === "ROLE_ADMIN" && (
+              <>
+                <Route index element={<Home />} />
+                <Route path="users">
+                  <Route index element={<ListUser />} />
+                  <Route path="new" element={<NewUser title="Thêm mới" />} />
+                  <Route
+                    path="edit/:id"
+                    element={<EditUser title="Chỉnh sửa" />}
+                  />
+                </Route>
+                <Route path="foods">
+                  <Route index element={<ListFood />} />
+                  <Route path="new" element={<NewFood title="Thêm mới" />} />
+                  <Route
+                    path="edit/:id"
+                    element={<EditFood title="Chỉnh sửa" />}
+                  />
+                </Route>
+                <Route path="categories">
+                  <Route index element={<ListCategory />} />
+                  <Route
+                    path="new"
+                    element={<NewCategory title="Thêm mới" />}
+                  />
+                  <Route
+                    path="edit/:id"
+                    element={<EditCategory title="Chỉnh sửa" />}
+                  />
+                </Route>
+                <Route path="desks">
+                  <Route index element={<ListDesk />} />
+                  <Route path="new" element={<NewDesk title="Thêm mới" />} />
+                  <Route
+                    path="edit/:id"
+                    element={<EditDesk title="Chỉnh sửa" />}
+                  />
+                </Route>
+              </>
+            )}
 
             {/* Cashier Route */}
-            <Route path="bookings">
-              <Route index element={<ListBooking />} />
-            </Route>
-            <Route path="invoices">
-              <Route index element={<ListInvoice />} />
-              <Route
-                path="new"
-                element={<NewInvoice title="Thêm mới hóa đơn" />}
-              />
-              <Route
-                path="addFoodToInvoice/:id"
-                element={<AddFoodToInvoiceDetail title="Gọi món" />}
-              />
-            </Route>
+            {authorities === "ROLE_CASHIER" && (
+              <>
+                <Route path="bookings">
+                  <Route index element={<ListBooking />} />
+                </Route>
+                <Route path="invoices">
+                  <Route index element={<ListInvoice />} />
+                  <Route
+                    path="new"
+                    element={<NewInvoice title="Thêm mới hóa đơn" />}
+                  />
+                  <Route
+                    path="addFoodToInvoice/:id"
+                    element={<AddFoodToInvoiceDetail title="Gọi món" />}
+                  />
+                </Route>
 
-            {/* Customer Route */}
-            <Route path="home">
-              <Route index element={<CustomerHome />} />
-            </Route>
+                <Route path="home">
+                  <Route index element={<CustomerHome />} />
+                </Route>
+              </>
+            )}
           </Route>
         </Routes>
       </BrowserRouter>
