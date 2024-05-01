@@ -89,7 +89,6 @@ const CustomerHome = () => {
 
   useEffect(() => {
     const emptyDesks = desks.filter((desk) => desk.status === "EMPTY");
-
     // Kiểm tra nếu không còn bàn trống
     if (emptyDesks.length === 0 && desks.length > 0) {
       setOpenDialog(true);
@@ -754,7 +753,7 @@ const CustomerHome = () => {
         <DialogTitle id="alert-dialog-title">{"Thông báo"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Hiện tại đã hết bàn. Xin vui lòng thử lại sau.
+            Xin lỗi quý khách, hiện tại chúng tôi không còn bàn trống
           </DialogContentText>
         </DialogContent>
         <DialogActions>

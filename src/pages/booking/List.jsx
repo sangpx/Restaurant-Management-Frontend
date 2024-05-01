@@ -88,6 +88,7 @@ const ListBooking = () => {
     alert("Xóa đặt bàn thành công!");
     setOpenDeleteDialog(false);
     dispatch(getAllBookings());
+    dispatch(getAlls());
   };
 
   //xử lý khi giữ bàn cho khách
@@ -280,6 +281,7 @@ const ListBooking = () => {
     setSelectedBookingId(id);
     setOpenAddFood(true);
     dispatch(getAllBookings());
+    dispatch(getAllInvoices());
     dispatch(getInvoiceByBookingId(id));
   };
 
@@ -288,7 +290,7 @@ const ListBooking = () => {
   );
 
   //xử lý chuyển trang khi ấn gọi món ăn
-  const handleAddFoodInvoice = (id) => {
+  const handleAddFoodInvoice = () => {
     navigate(`/invoices/addFoodToInvoice/${invoice.id}`);
   };
 
@@ -303,7 +305,8 @@ const ListBooking = () => {
   const handleAddInvoice = () => {
     dispatch(createInvoice(selectedBookingId));
     alert("Thêm hóa đơn thành công!");
-    dispatch(getAllInvoices);
+    dispatch(getAllInvoices());
+    dispatch(getAllBookings());
     handleClose();
   };
 
@@ -358,6 +361,7 @@ const ListBooking = () => {
       },
     ]);
     setSelectedDesk("");
+    dispatch(getAlls());
   };
 
   //xử lý khi hủy đặt bàn
@@ -553,7 +557,13 @@ const ListBooking = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy</Button>
-          <Button onClick={handleAddFoodInvoice}>Thêm mới</Button>
+          <Button
+            onClick={() => {
+              handleAddFoodInvoice();
+            }}
+          >
+            Thêm mới
+          </Button>
         </DialogActions>
       </Dialog>
 
