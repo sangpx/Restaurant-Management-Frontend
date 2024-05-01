@@ -161,14 +161,6 @@ const ListInvoice = () => {
       <div className="listContainer">
         <div className="datatable">
           <div className="datatableTitle">
-            <TextField
-              style={{
-                width: 200,
-              }}
-              id="outlined-basic"
-              label="Tìm kiếm"
-              variant="outlined"
-            />
             <div className="datatableTitle-content">
               <Link to="/invoices/new" className="link">
                 Thêm mới

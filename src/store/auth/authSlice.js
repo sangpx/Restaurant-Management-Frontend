@@ -19,9 +19,23 @@ const initialState = {
   loading: false,
   message: {},
   isAuthenticated: false,
+  countUser: 0,
 };
 
 const token = localStorage.getItem("accessToken");
+
+export const getCountUser = createAsyncThunk("users/countUser", async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/users/countUser`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const login = createAsyncThunk(
   "users/signin",
@@ -249,6 +263,10 @@ const authSlice = createSlice({
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(getCountUser.fulfilled, (state, action) => {
+        state.status = "done";
+        state.countUser = action.payload;
       });
   },
 });
@@ -260,5 +278,6 @@ export const selectAllUsers = (state) => state.userReducer.listUsers;
 export const selectUser = (state) => state.userReducer.user;
 export const selectAllRoles = (state) => state.userReducer.listRoles;
 export const isAuthenticated = (state) => state.userReducer.isAuthenticated;
+export const countUsers = (state) => state.userReducer.countUser;
 
 export default userReducer;

@@ -37,6 +37,7 @@ const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
       setStatus(invoiceExisted.status);
     }
   }, [id, invoices]);
+
   const formatIntoMoney = (value) => {
     return value.toLocaleString("vi-VN", {
       style: "currency",
@@ -59,7 +60,7 @@ const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
         </h2>
         <div style={{ marginBottom: "20px" }}>
           <div>
-            <strong>Số HD:</strong> {id}
+            <strong>Số hóa đơn:</strong> {id}
           </div>
           <div>
             <strong>Giờ vào:</strong> {checkInTime}
@@ -79,7 +80,8 @@ const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
           <thead>
             <tr style={{ borderBottom: "1px solid #ccc" }}>
               <th style={{ textAlign: "left", padding: "8px" }}>Tên món ăn</th>
-              <th style={{ textAlign: "left", padding: "8px" }}>Số lượng</th>
+              <th style={{ textAlign: "left", padding: "8px" }}>Giá</th>
+              <th style={{ textAlign: "center", padding: "8px" }}>Số lượng</th>
               <th style={{ textAlign: "left", padding: "8px" }}>Thành tiền</th>
             </tr>
           </thead>
@@ -87,7 +89,12 @@ const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
             {invoiceDetails.map((item, index) => (
               <tr key={index} style={{ borderBottom: "1px solid #ccc" }}>
                 <td style={{ padding: "8px" }}>{item.nameFood}</td>
-                <td style={{ padding: "8px" }}>{item.quantity}</td>
+                <td style={{ padding: "8px" }}>
+                  {formatIntoMoney(item.price)}
+                </td>
+                <td style={{ padding: "8px", textAlign: "center" }}>
+                  {item.quantity}
+                </td>
                 <td style={{ padding: "8px" }}>
                   {formatIntoMoney(item.intoMoney)}
                 </td>

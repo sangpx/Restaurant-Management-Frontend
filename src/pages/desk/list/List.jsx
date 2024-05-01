@@ -136,7 +136,7 @@ const ListDesk = () => {
                   },
                 }}
                 pageSizeOptions={[5, 10]}
-                checkboxSelection
+                // checkboxSelection
               />
             ) : (
               <CircularProgress />

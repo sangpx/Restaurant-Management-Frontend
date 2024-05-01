@@ -126,7 +126,7 @@ const ListCategory = () => {
                     pageSize: 8,
                   },
                 }}
-                checkboxSelection
+                // checkboxSelection
                 disableRowSelectionOnClick={true}
                 pageSizeOptions={[5, 10, 20]}
               />

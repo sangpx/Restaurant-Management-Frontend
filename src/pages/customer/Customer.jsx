@@ -500,7 +500,7 @@ const CustomerHome = () => {
                 </div>
                 <div className="col-lg-4 col-md-6 form-group mt-3 formInput">
                   <FormControl sx={{ m: 1, minWidth: 200 }}>
-                    <InputLabel id="deskId">Số bàn</InputLabel>
+                    <InputLabel id="deskId">Tên bàn</InputLabel>
                     <Select
                       className="input"
                       labelId="deskId"
@@ -515,7 +515,7 @@ const CustomerHome = () => {
                           .filter((desk) => desk.status === "EMPTY")
                           .map((desk) => (
                             <MenuItem key={desk.id} value={desk.id}>
-                              {desk.name}
+                              {desk.id}
                             </MenuItem>
                           ))}
                     </Select>

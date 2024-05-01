@@ -6,13 +6,24 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { countFoods } from "../../store/food/foodSlice";
+import { countUsers } from "../../store/auth/authSlice";
 
 const Widget = ({ type }) => {
   const dispatch = useDispatch();
   const countFood = useSelector(countFoods);
+  const countUser = useSelector(countUsers);
   let data;
+  let counterValue;
 
-  //temporary
+  // Xác định giá trị counter dựa trên loại widget
+  if (type === "user") {
+    counterValue = countUser;
+  } else if (type === "food") {
+    counterValue = countFood;
+  } else {
+    counterValue = "N/A"; // Trường hợp không phù hợp với user hoặc order
+  }
+
   switch (type) {
     case "user":
       data = {
@@ -30,11 +41,11 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "order":
+    case "food":
       data = {
         title: "Món ăn",
         isMoney: false,
-        link: "View all orders",
+        link: "View all foods",
         icon: (
           <ShoppingCartOutlinedIcon
             className="icon"
@@ -76,16 +87,21 @@ const Widget = ({ type }) => {
       };
       break;
     default:
-      break;
+      data = {
+        title: "Unknown",
+        link: "N/A",
+        icon: null,
+      };
   }
 
   return (
     <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
-        <span className="counter">{countFood}</span>
+        <span className="counter">{counterValue}</span>
         <span className="link">{data.link}</span>
       </div>
+      <div className="right">{data.icon}</div>
     </div>
   );
 };

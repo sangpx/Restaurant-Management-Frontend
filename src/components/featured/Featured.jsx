@@ -9,7 +9,6 @@ import {
 } from "../../store/revenueReport/revenueSlice";
 import { useEffect, useState } from "react";
 import { Select, MenuItem, Button } from "@mui/material";
-import { countFoods, getCountFood } from "../../store/food/foodSlice";
 
 const Featured = () => {
   const dispatch = useDispatch();
@@ -31,10 +30,11 @@ const Featured = () => {
   useEffect(() => {
     dispatch(getTodayRevenue());
     dispatch(getMonthlyRevenue({ year, month }));
-    dispatch(getMonthlyRevenue({ year, month }));
-  }, [dispatch]);
+  }, [dispatch, month, year]);
 
-  const handeGetPriceMonthRevenue = () => {};
+  // const handeGetPriceMonthRevenue = () => {
+  //   console.log("totalPriceMonthRevenue: ", totalPriceMonthRevenue);
+  // };
 
   return (
     <div className="featured">
@@ -59,7 +59,7 @@ const Featured = () => {
               </MenuItem>
             ))}
           </Select>
-          <Button onClick={handeGetPriceMonthRevenue}>Xem</Button>
+          {/* <Button onClick={handeGetPriceMonthRevenue}>Xem</Button> */}
         </div>
         <p className="title">Tổng doanh thu tháng</p>
         <div className="itemResult positive">
@@ -73,12 +73,26 @@ const Featured = () => {
               <div className="resultAmount">{totalPriceTodayRevenue} VNĐ</div>
             </div>
           </div>
-          {/* <div className="item">
+          <div className="item">
             <div className="itemTitle">Doanh thu tuần nay</div>
             <div className="itemResult positive">
               <div className="resultAmount">0VNĐ</div>
             </div>
-          </div> */}
+          </div>
+        </div>
+        <div className="summary">
+          <div className="item">
+            <div className="itemTitle">Hóa đơn bán ngày hôm nay</div>
+            <div className="itemResult positive">
+              <div className="resultAmount">{totalPriceTodayRevenue}</div>
+            </div>
+          </div>
+          <div className="item">
+            <div className="itemTitle">Hóa đơn tháng nay</div>
+            <div className="itemResult positive">
+              <div className="resultAmount">0</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

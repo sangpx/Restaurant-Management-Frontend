@@ -12,25 +12,24 @@ import {
   getMonthlyRevenue,
   selectMonthRevenue,
 } from "../../store/revenueReport/revenueSlice";
-import { useEffect } from "react";
 
 const Chart = ({ aspect, title }) => {
   const dispatch = useDispatch();
   const totalPriceMonthRevenue = useSelector(selectMonthRevenue);
 
   const data = [
-    { name: "Tháng 1", Total: 0 },
-    { name: "Tháng 2", Total: 0 },
-    { name: "Tháng 3", Total: 0 },
-    { name: "Tháng 4", Total: totalPriceMonthRevenue },
-    { name: "Tháng 5", Total: 0 },
-    { name: "Tháng 6", Total: 0 },
-    { name: "Tháng 7", Total: 0 },
-    { name: "Tháng 8", Total: 0 },
-    { name: "Tháng 9", Total: 0 },
-    { name: "Tháng 10", Total: 0 },
-    { name: "Tháng 11", Total: 0 },
-    { name: "Tháng 12", Total: 0 },
+    { name: "Tháng 1", Total: 1200 },
+    { name: "Tháng 2", Total: 2300 },
+    { name: "Tháng 3", Total: 2600 },
+    { name: "Tháng 4", Total: 2000 },
+    { name: "Tháng 5", Total: 2300 },
+    { name: "Tháng 6", Total: 2100 },
+    { name: "Tháng 7", Total: 2200 },
+    { name: "Tháng 8", Total: 2000 },
+    { name: "Tháng 9", Total: 2700 },
+    { name: "Tháng 10", Total: 2300 },
+    { name: "Tháng 11", Total: 2900 },
+    { name: "Tháng 12", Total: 2500 },
   ];
 
   return (

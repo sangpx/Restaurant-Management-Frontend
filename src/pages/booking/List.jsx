@@ -493,7 +493,7 @@ const ListBooking = () => {
                               .filter((desk) => desk.status === "EMPTY")
                               .map((desk) => (
                                 <MenuItem key={desk.id} value={desk.id}>
-                                  {desk.name}
+                                  {desk.id}
                                 </MenuItem>
                               ))}
                         </Select>
