@@ -89,9 +89,7 @@ const ComponentToPrint = forwardRef(({ invoiceDetails }, ref) => {
             {invoiceDetails.map((item, index) => (
               <tr key={index} style={{ borderBottom: "1px solid #ccc" }}>
                 <td style={{ padding: "8px" }}>{item.nameFood}</td>
-                <td style={{ padding: "8px" }}>
-                  {formatIntoMoney(item.price)}
-                </td>
+                <td style={{ padding: "8px" }}>{item.price}</td>
                 <td style={{ padding: "8px", textAlign: "center" }}>
                   {item.quantity}
                 </td>

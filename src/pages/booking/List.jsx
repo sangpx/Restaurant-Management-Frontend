@@ -161,13 +161,6 @@ const ListBooking = () => {
       width: 150,
       editable: true,
     },
-    {
-      field: "quantityPerson",
-      headerName: "Số lượng người",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
   ];
 
   //Cột tác vụ
@@ -464,7 +457,7 @@ const ListBooking = () => {
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div className="formInput">
+                    {/* <div className="formInput">
                       <TextField
                         className="input"
                         label="Số lượng người"
@@ -475,7 +468,7 @@ const ListBooking = () => {
                         value={newBooking.quantityPerson || ""}
                         onChange={handleInputChange}
                       />
-                    </div>
+                    </div> */}
                     <div className="formInput">
                       <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="deskId">Tên bàn</InputLabel>

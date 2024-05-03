@@ -14,7 +14,7 @@ const Home = () => {
 
         <div className="charts">
           <Featured />
-          <Chart title="Thống kê doanh thu trong 12 tháng" aspect={2 / 1} />
+          {/* <Chart title="Thống kê doanh thu trong 12 tháng" aspect={2 / 1} /> */}
         </div>
       </div>
     </div>

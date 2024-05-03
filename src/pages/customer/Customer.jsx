@@ -484,7 +484,7 @@ const CustomerHome = () => {
                   />
                   <div className="validate"></div>
                 </div>
-                <div className="col-lg-4 col-md-6 form-group mt-3">
+                {/* <div className="col-lg-4 col-md-6 form-group mt-3">
                   <input
                     type="number"
                     className="form-control"
@@ -497,7 +497,7 @@ const CustomerHome = () => {
                     onChange={handleQuantityChange}
                   />
                   <div className="validate"></div>
-                </div>
+                </div> */}
                 <div className="col-lg-4 col-md-6 form-group mt-3 formInput">
                   <FormControl sx={{ m: 1, minWidth: 200 }}>
                     <InputLabel id="deskId">Tên bàn</InputLabel>

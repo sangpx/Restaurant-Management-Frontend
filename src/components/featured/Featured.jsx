@@ -73,14 +73,14 @@ const Featured = () => {
               <div className="resultAmount">{totalPriceTodayRevenue} VNĐ</div>
             </div>
           </div>
-          <div className="item">
+          {/* <div className="item">
             <div className="itemTitle">Doanh thu tuần nay</div>
             <div className="itemResult positive">
               <div className="resultAmount">0VNĐ</div>
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="summary">
+        {/* <div className="summary">
           <div className="item">
             <div className="itemTitle">Hóa đơn bán ngày hôm nay</div>
             <div className="itemResult positive">
@@ -93,7 +93,7 @@ const Featured = () => {
               <div className="resultAmount">0</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
